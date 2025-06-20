@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.motion.widget.MotionLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/constraint"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    app:layoutDescription="@xml/activity_search_scene"
     tools:context=".SearchActivity">
 
     <EditText
@@ -22,9 +24,183 @@
         android:paddingStart="47dp"
         android:textColorHint="#5A5858"
         android:textSize="17sp"
+        app:layout_constraintBottom_toTopOf="@id/dificultad"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <com.google.android.material.chip.ChipGroup
+        android:id="@+id/dificultad"
+        android:layout_width="409dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toTopOf="@id/tiempoPreparacion"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.108"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/search"
+        app:layout_constraintVertical_bias="0.054"
+        app:singleSelection="true">
+
+        <com.google.android.material.chip.Chip
+            android:id="@+id/fácil"
+            app:chipMinTouchTargetSize="0dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:checkable="true"
+            android:text="fácil" />
+
+        <com.google.android.material.chip.Chip
+            android:id="@+id/media"
+            app:chipMinTouchTargetSize="0dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:checkable="true"
+            android:text="medio" />
+
+        <com.google.android.material.chip.Chip
+            android:id="@+id/dificil"
+            app:chipMinTouchTargetSize="0dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:checkable="true"
+            android:text="avanzado" />
+
+        <com.google.android.material.chip.ChipGroup
+            android:id="@+id/tiempoPreparacion"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toTopOf="@id/porciones"
+            app:layout_constraintEnd_toEndOf="parent"
+
+            app:layout_constraintHorizontal_bias="0.051"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/dificultad"
+            app:singleSelection="true">
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/less15"
+                app:chipMinTouchTargetSize="0dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:checkable="true"
+                android:text="15" />
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/less30"
+                app:chipMinTouchTargetSize="0dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:checkable="true"
+                android:text="30" />
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/less45"
+                app:chipMinTouchTargetSize="0dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:checkable="true"
+                android:text="45" />
+
+        </com.google.android.material.chip.ChipGroup>
+    </com.google.android.material.chip.ChipGroup>
+
+    <com.google.android.material.chip.ChipGroup
+        android:id="@+id/porciones"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toTopOf="@+id/version"
+        app:layout_constraintEnd_toEndOf="parent"
+
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tiempoPreparacion"
+        app:singleSelection="true">
+
+        <com.google.android.material.chip.Chip
+            android:id="@+id/uno"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:maxWidth="30dp"
+            app:chipMinTouchTargetSize="0dp"
+            android:checkable="true"
+            android:text="1" />
+
+        <com.google.android.material.chip.Chip
+            android:id="@+id/dos"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:maxWidth="30dp"
+            app:chipMinTouchTargetSize="0dp"
+            android:checkable="true"
+            android:text="2" />
+
+        <com.google.android.material.chip.Chip
+            android:id="@+id/cuatro"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:checkable="true"
+            android:clickable="true"
+            android:maxWidth="30dp"
+            app:chipMinTouchTargetSize="0dp"
+            android:text="4" />
+
+        <com.google.android.material.chip.Chip
+            android:id="@+id/seis"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:maxWidth="30dp"
+            app:chipMinTouchTargetSize="0dp"
+            android:checkable="true"
+            android:text="6" />
+
+        <com.google.android.material.chip.Chip
+            android:id="@+id/ocho"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:maxWidth="30dp"
+            app:chipMinTouchTargetSize="0dp"
+            android:checkable="true"
+            android:text="8" />
+
+        <com.google.android.material.chip.ChipGroup
+            android:id="@+id/version"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toTopOf="@+id/rating"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/porciones"
+            app:singleSelection="true"
+
+            >
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/TM6"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:checkable="true"
+                app:chipMinTouchTargetSize="0dp"
+                android:text="TM6" />
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/TM5"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:checkable="true"
+                app:chipMinTouchTargetSize="0dp"
+
+                android:text="TM5" />
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/TM31"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:chipMinTouchTargetSize="0dp"
+                android:checkable="true"
+                android:text="TM31" />
+
+        </com.google.android.material.chip.ChipGroup>
+    </com.google.android.material.chip.ChipGroup>
 
     <ImageView
         android:id="@+id/back_to_home"
@@ -37,13 +213,127 @@
         app:layout_constraintStart_toStartOf="@+id/search"
         app:layout_constraintTop_toTopOf="@+id/search" />
 
+    <com.google.android.material.chip.ChipGroup
+        android:id="@+id/tiempoTotal"
+        android:layout_width="352dp"
+        android:layout_height="81dp"
+        app:layout_constraintBottom_toTopOf="@+id/results"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/rating"
+        app:singleSelection="true"
+
+        >
+
+        <com.google.android.material.chip.Chip
+            android:id="@+id/less15T"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="0dp"
+            android:layout_marginLeft="0dp"
+            android:layout_marginEnd="0dp"
+            app:chipMinTouchTargetSize="0dp"
+
+            android:layout_marginRight="0dp"
+            android:checkable="true"
+            android:text="15" />
+
+        <com.google.android.material.chip.Chip
+            android:id="@+id/less30T"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:checkable="true"
+            app:chipMinTouchTargetSize="0dp"
+            android:clickable="true"
+            android:text="30" />
+
+        <com.google.android.material.chip.Chip
+            android:id="@+id/less45T"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:checkable="true"
+            android:clickable="true"
+            app:chipMinTouchTargetSize="0dp"
+
+            android:text="45" />
+
+        <com.google.android.material.chip.ChipGroup
+            android:id="@+id/rating"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toTopOf="@+id/tiempoTotal"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/version"
+            app:singleSelection="true"
+
+            tools:layout_editor_absoluteX="158dp">
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/less1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:chipMinTouchTargetSize="0dp"
+
+                android:checkable="true"
+                android:text="1" />
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/less2"
+                android:layout_width="wrap_content"
+                app:chipMinTouchTargetSize="0dp"
+                android:layout_height="wrap_content"
+                android:checkable="true"
+                android:text="2" />
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/less3"
+                app:chipMinTouchTargetSize="0dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:checkable="true"
+                android:text="3" />
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/less4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:chipMinTouchTargetSize="0dp"
+                android:checkable="true"
+                android:text="4" />
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/less5"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:chipMinTouchTargetSize="0dp"
+                android:checkable="true"
+                android:text="5" />
+
+        </com.google.android.material.chip.ChipGroup>
+    </com.google.android.material.chip.ChipGroup>
+
+
+    <TextView
+        android:id="@+id/results"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="25dp"
+
+        android:layout_marginTop="12dp"
+        android:text="Mostrando resultados."
+        android:textAppearance="@style/TextAppearance.AppCompat.Large"
+        app:layout_constraintTop_toBottomOf="@id/tiempoTotal"
+        tools:layout_editor_absoluteX="48dp" />
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rcview"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="12dp"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/search" />
+        app:layout_constraintTop_toBottomOf="@+id/results" />
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.constraintlayout.motion.widget.MotionLayout>

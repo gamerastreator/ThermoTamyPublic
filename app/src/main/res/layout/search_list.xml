@@ -8,8 +8,8 @@
 
     <androidx.cardview.widget.CardView
         android:id="@+id/imame_card"
-        android:layout_width="60dp"
-        android:layout_height="60dp"
+        android:layout_width="75dp"
+        android:layout_height="75dp"
         android:layout_marginStart="20dp"
         app:cardCornerRadius="12dp"
         app:cardElevation="6dp"
@@ -19,8 +19,8 @@
 
         <ImageView
             android:id="@+id/search_img"
-            android:layout_width="64dp"
-            android:layout_height="64dp"
+            android:layout_width="75dp"
+            android:layout_height="75dp"
             android:layout_gravity="center"
             android:scaleType="centerCrop"
             android:src="@drawable/catergory_drinks" />

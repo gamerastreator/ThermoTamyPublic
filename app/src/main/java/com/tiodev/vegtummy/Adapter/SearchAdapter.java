@@ -3,6 +3,7 @@ package com.tiodev.vegtummy.Adapter;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Environment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,7 +18,9 @@ import com.bumptech.glide.Glide;
 import com.tiodev.vegtummy.R;
 import com.tiodev.vegtummy.RecipeActivity;
 import com.tiodev.vegtummy.RoomDB.User;
+import com.tiodev.vegtummy.WebviewRecipeActivity;
 
+import java.io.File;
 import java.util.List;
 
 public class SearchAdapter extends  RecyclerView.Adapter<SearchAdapter.Searchviewholder>{
@@ -42,14 +45,18 @@ public class SearchAdapter extends  RecyclerView.Adapter<SearchAdapter.Searchvie
     public void onBindViewHolder(@NonNull Searchviewholder holder, int position) {
         final User temp = data.get(position);
 
-        Glide.with(holder.img.getContext()).load(data.get(position).getImg()).into(holder.img);
-        holder.txt.setText(data.get(position).getTittle());
+        File c = new File("/data/" +data.get(position).getIdentifier() +".jpg");
+        File html = new File("data/" +data.get(position).getIdentifier() +".html");
+
+        Glide.with(holder.img.getContext()).load("file:///android_asset/data/" +data.get(position).getIdentifier() +".jpg").into(holder.img);
+        holder.txt.setText(data.get(position).getTitle());
         holder.item.setOnClickListener(v ->{
-            Intent intent = new Intent(context, RecipeActivity.class);
-            intent.putExtra("img", temp.getImg());
-            intent.putExtra("tittle", temp.getTittle());
-            intent.putExtra("des", temp.getDes());
-            intent.putExtra("ing", temp.getIng());
+            Intent intent = new Intent(context, WebviewRecipeActivity.class);
+           // intent.putExtra("img", temp.getImg());
+            intent.putExtra("tittle", temp.getTitle());
+            intent.putExtra("path", html.getPath());
+           // intent.putExtra("des", temp.getDes());
+           // intent.putExtra("ing", temp.getIng());
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             context.startActivity(intent);
         });

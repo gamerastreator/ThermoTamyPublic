@@ -50,16 +50,16 @@ public class Adaptar extends  RecyclerView.Adapter<Adaptar.myviewHolder>{
 
         final User temp = data.get(position);
 
-        holder.txt1.setText(data.get(position).getTittle());
-        Glide.with(holder.txt1.getContext()).load(data.get(position).getImg()).into(holder.img);
+        holder.txt1.setText(data.get(position).getTitle());
+        Glide.with(holder.txt1.getContext()).load(data.get(position).getIdentifier()).into(holder.img);
 
         holder.img2.setOnClickListener(v -> {
 
             Intent intent = new Intent(context, RecipeActivity.class);
-            intent.putExtra("img", temp.getImg());
-            intent.putExtra("tittle", temp.getTittle());
-            intent.putExtra("des", temp.getDes());
-            intent.putExtra("ing", temp.getIng()); // Ingredients
+           // intent.putExtra("img", temp.getImg());
+            intent.putExtra("tittle", temp.getTitle());
+            //intent.putExtra("des", temp.getDes());
+            //intent.putExtra("ing", temp.getIng()); // Ingredients
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             context.startActivity(intent);
 

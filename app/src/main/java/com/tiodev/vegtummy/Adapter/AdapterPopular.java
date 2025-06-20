@@ -39,21 +39,20 @@ public class AdapterPopular extends RecyclerView.Adapter<AdapterPopular.myviewho
     public void onBindViewHolder(@NonNull myviewholder holder, int position) {
         final User temp = data.get(holder.getAdapterPosition());
 
-        // Split the time from ingredients
-        String[] time = data.get(holder.getAdapterPosition()).getIng().split("\n");
+
         // Set time
-        holder.txt2.setText("\uD83D\uDD50 "+time[0]);
+        holder.txt2.setText("\uD83D\uDD50 "+data.get(holder.getAdapterPosition()).getTotalTime());
         // Load image from link
-        Glide.with(holder.txt2.getContext()).load(data.get(holder.getAdapterPosition()).getImg()).into(holder.img);
+        Glide.with(holder.txt2.getContext()).load(data.get(holder.getAdapterPosition()).getIdentifier()).into(holder.img);
         // Set title
-        holder.txt.setText(data.get(holder.getAdapterPosition()).getTittle());
+        holder.txt.setText(data.get(holder.getAdapterPosition()).getTitle());
 
         holder.img.setOnClickListener(v ->{
             Intent intent = new Intent(context, RecipeActivity.class);
-            intent.putExtra("img", temp.getImg());
-            intent.putExtra("tittle", temp.getTittle());
-            intent.putExtra("des", temp.getDes());
-            intent.putExtra("ing", temp.getIng());
+            //intent.putExtra("img", temp.getImg());
+            intent.putExtra("tittle", temp.getTitle());
+            //intent.putExtra("des", temp.getDes());
+            //intent.putExtra("ing", temp.getIng());
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             context.startActivity(intent);
         });

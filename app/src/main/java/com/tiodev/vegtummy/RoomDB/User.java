@@ -12,58 +12,136 @@ public class User {
     public int uid;
 
     @NonNull
-    public String img;
+    public String title;
 
-    @NonNull
-    public String tittle;
+    public String identifier;
 
-    @NonNull
-    public String des;
+    public Integer totalTime;
 
-    @NonNull
-    public String ing;
+    public Integer cookTime;
+    public Integer prepTime;
+    public Integer recipeYield;
+    public String recipeYieldText;
+    public String difficulty;
+    public Integer rating;
 
-    @NonNull
     public String category;
 
-    public User(String img, String tittle, String des, String ing, String category) {
+    public String keywords;
+
+    public String collections;
+
+    public String devices;
+
+
+/*    public User(String img, String tittle, String des, String ing, String category) {
         this.img = img;
         this.tittle = tittle;
         this.des = des;
         this.ing = ing;
         this.category = category;
+    }*/
+
+    public User(String identifier, String title,
+                Integer totalTime, Integer cookTime, Integer prepTime,
+                Integer recipeYield, String difficulty, Integer rating,
+                String recipeYieldText, String category, String keywords,
+                String collections, String devices) {
+        this.identifier = identifier;
+        this.title = title;
+        this.totalTime = totalTime;
+        this.cookTime = cookTime;
+        this.prepTime = prepTime;
+        this.recipeYield = recipeYield;
+        this.difficulty = difficulty;
+        this.rating = rating;
+        this.recipeYieldText =recipeYieldText;
+        this.category = category;
+        this.keywords = keywords;
+        this.collections = collections;
+        this.devices = devices;
     }
 
-    public String getImg() {
-        return img;
+    public int getUid() {
+        return uid;
     }
 
-    public void setImg(String img) {
-        this.img = img;
+    public void setUid(int uid) {
+        this.uid = uid;
     }
 
-    public String getTittle() {
-        return tittle;
+    @NonNull
+    public String getTitle() {
+        return title;
     }
 
-    public void setTittle(String tittle) {
-        this.tittle = tittle;
+    public void setTitle(@NonNull String title) {
+        this.title = title;
     }
 
-    public String getDes() {
-        return des;
+    @NonNull
+    public String getIdentifier() {
+        return identifier;
     }
 
-    public void setDes(String des) {
-        this.des = des;
+    public void setIdentifier(@NonNull String identifier) {
+        this.identifier = identifier;
     }
 
-    public String getIng() {
-        return ing;
+    public Integer getTotalTime() {
+        return totalTime;
     }
 
-    public void setIng(String ing) {
-        this.ing = ing;
+    public void setTotalTime(Integer totalTime) {
+        this.totalTime = totalTime;
+    }
+
+    public Integer getCookTime() {
+        return cookTime;
+    }
+
+    public void setCookTime(Integer cookTime) {
+        this.cookTime = cookTime;
+    }
+
+    public Integer getPrepTime() {
+        return prepTime;
+    }
+
+    public void setPrepTime(Integer prepTime) {
+        this.prepTime = prepTime;
+    }
+
+    public Integer getRecipeYield() {
+        return recipeYield;
+    }
+
+    public void setRecipeYield(Integer recipeYield) {
+        this.recipeYield = recipeYield;
+    }
+
+    public String getDifficulty() {
+        return difficulty;
+    }
+
+    public void setDifficulty(String difficulty) {
+        this.difficulty = difficulty;
+    }
+
+    public Integer getRating() {
+        return rating;
+    }
+
+    public void setRating(Integer rating) {
+        this.rating = rating;
+    }
+
+    public String getRecipeYieldText() {
+        return recipeYieldText;
+    }
+
+    public void setRecipeYieldText(String recipeYieldText) {
+        this.recipeYieldText = recipeYieldText;
     }
 
     public String getCategory() {
@@ -72,6 +150,30 @@ public class User {
 
     public void setCategory(String category) {
         this.category = category;
+    }
+
+    public String getKeywords() {
+        return keywords;
+    }
+
+    public void setKeywords(String keywords) {
+        this.keywords = keywords;
+    }
+
+    public String getCollections() {
+        return collections;
+    }
+
+    public void setCollections(String collections) {
+        this.collections = collections;
+    }
+
+    public String getDevices() {
+        return devices;
+    }
+
+    public void setDevices(String devices) {
+        this.devices = devices;
     }
 }
 

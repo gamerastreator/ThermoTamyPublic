@@ -22,6 +22,7 @@ import android.view.Window;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.airbnb.lottie.LottieAnimationView;
@@ -37,18 +38,19 @@ import java.util.List;
 
 public class HomeActivity extends AppCompatActivity {
 
-    ImageView salad, main, drinks, dessert, menu;
+    ImageView salad, main, drinks, dessert;
     RecyclerView rcview_home;
     List<User> dataPopular = new ArrayList<>();
     LottieAnimationView lottie;
     EditText editText;
     List<ResModel> data;
+    TextView textview4;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
-
+        textview4 = findViewById(R.id.textView4);
         // Find views
         salad = findViewById(R.id.salad);
         main = findViewById(R.id.MainDish);
@@ -57,7 +59,6 @@ public class HomeActivity extends AppCompatActivity {
         rcview_home = findViewById(R.id.rcview_popular);
         lottie = findViewById(R.id.lottie);
         editText = findViewById(R.id.editText);
-        menu = findViewById(R.id.imageView);
 
         // Set layout to recyclerView
         rcview_home.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
@@ -79,9 +80,9 @@ public class HomeActivity extends AppCompatActivity {
 
         });
 
-        // Menu button
+     /*   // Menu button
         menu.setOnClickListener(v -> showBottomSheet());
-
+*/
 
 
     }
@@ -93,6 +94,7 @@ public class HomeActivity extends AppCompatActivity {
         AppDatabase db = Room.databaseBuilder(getApplicationContext(),
                         AppDatabase.class, "db_name").allowMainThreadQueries()
                        .createFromAsset("database/recipe.db")
+                        .fallbackToDestructiveMigration()
                        .build();
         UserDao userDao = db.userDao();
 
@@ -100,15 +102,16 @@ public class HomeActivity extends AppCompatActivity {
         List<User> recipes = userDao.getAll();
 
         // Filter Popular category from all recipes
-        for(int i = 0; i<recipes.size(); i++){
+        /*for(int i = 0; i<recipes.size(); i++){
             if(recipes.get(i).getCategory().contains("Popular")){
                 dataPopular.add(recipes.get(i));
             }
-        }
+        }*/
 
         // Set popular list to adapter
         AdapterPopular adapter = new AdapterPopular(dataPopular, getApplicationContext());
         rcview_home.setAdapter(adapter);
+        textview4.setText(textview4.getText() + " " + recipes.size() + " recetas!");
 
         // Hide progress animation
         lottie.setVisibility(View.GONE);
@@ -125,7 +128,7 @@ public class HomeActivity extends AppCompatActivity {
 
 
     // Create a bottom dialog for privacy policy and about
-    private void showBottomSheet() {
+  /*  private void showBottomSheet() {
 
         Dialog dialog = new Dialog(this);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -152,5 +155,5 @@ public class HomeActivity extends AppCompatActivity {
         dialog.getWindow().getAttributes().windowAnimations = R.style.DialogAnimation;
         dialog.getWindow().setGravity(Gravity.BOTTOM);
     }
-
+*/
 }

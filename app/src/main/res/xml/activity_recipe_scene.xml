@@ -11,33 +11,25 @@
     </Transition>
 
     <ConstraintSet android:id="@+id/start">
+        <Constraint
+            android:layout_width="45dp"
+            android:layout_height="45dp"
+            android:layout_marginStart="4dp"
+            motion:layout_constraintTop_toTopOf="parent"
+            motion:layout_constraintStart_toStartOf="@id/webView"
+            android:layout_marginTop="660dp"
+            android:id="@+id/back_btn"
+            android:layout_marginLeft="4dp" />
+        <Constraint
+            android:layout_height="match_parent"
+            motion:layout_editor_absoluteX="0dp"
+            android:layout_width="match_parent"
+            android:id="@+id/webView"
+            motion:layout_constraintBottom_toBottomOf="parent"
+            motion:layout_constraintTop_toTopOf="parent" />
     </ConstraintSet>
 
     <ConstraintSet android:id="@+id/end">
-        <Constraint
-            android:id="@+id/recipe_img"
-            motion:layout_constraintEnd_toEndOf="parent"
-            android:layout_width="match_parent"
-            android:layout_height="100dp"
-            motion:layout_constraintTop_toTopOf="parent"
-            motion:layout_constraintStart_toStartOf="parent"/>
-        <Constraint
-            motion:layout_constraintEnd_toEndOf="parent"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            motion:layout_constraintHorizontal_bias="0.0"
-            motion:layout_constraintTop_toTopOf="parent"
-            motion:layout_constraintStart_toStartOf="parent"
-            android:layout_marginTop="100dp"
-            android:id="@+id/relativeLayout" />
-        <Constraint
-            android:id="@+id/image_gradient"
-            motion:layout_constraintEnd_toEndOf="parent"
-            android:layout_width="match_parent"
-            android:layout_height="100dp"
-            motion:layout_constraintBottom_toBottomOf="@+id/recipe_img"
-            motion:layout_constraintStart_toStartOf="parent"
-            android:alpha="0" />
         <Constraint
             android:id="@+id/back_btn"
             android:layout_width="50dp"
@@ -46,16 +38,6 @@
             motion:layout_constraintTop_toTopOf="parent"
             motion:layout_constraintStart_toStartOf="parent"
             android:layout_marginTop="24dp" />
-        <Constraint
-            android:id="@+id/scroll"
-            motion:layout_constraintEnd_toEndOf="parent"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            motion:layout_constraintTop_toTopOf="@+id/relativeLayout"
-            android:layout_marginRight="15dp"
-            android:layout_marginTop="20dp"
-            android:rotation="180"
-            android:layout_marginEnd="15dp" />
 
     </ConstraintSet>
 </MotionScene>

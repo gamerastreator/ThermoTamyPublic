@@ -32,7 +32,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:fontFamily="@font/poppins_light"
-        android:text="Made in 🇮🇳"
+        android:text="Hecho por Kike "
         android:textColor="#646464"
         android:textSize="16sp"
         app:layout_constraintBottom_toBottomOf="parent"

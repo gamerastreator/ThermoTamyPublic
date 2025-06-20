@@ -49,6 +49,7 @@ public class MainActivity extends AppCompatActivity {
         AppDatabase db = Room.databaseBuilder(getApplicationContext(),
                         AppDatabase.class, "db_name").allowMainThreadQueries()
                 .createFromAsset("database/recipe.db")
+                .fallbackToDestructiveMigration()
                 .build();
         UserDao userDao = db.userDao();
 
@@ -56,11 +57,11 @@ public class MainActivity extends AppCompatActivity {
         List<User> recipes = userDao.getAll();
 
         // Filter category from recipes
-        for(int i = 0; i<recipes.size(); i++){
+        /*for(int i = 0; i<recipes.size(); i++){
             if(recipes.get(i).getCategory().contains(getIntent().getStringExtra("Category"))){
                 dataFinal.add(recipes.get(i));
             }
-        }
+        }*/
 
         // Set category list to adapter
         Adaptar adapter = new Adaptar(dataFinal, getApplicationContext());

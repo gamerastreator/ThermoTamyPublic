@@ -1,18 +1,22 @@
 package com.tiodev.vegtummy.Model;
 
 public class ResModel  {
-    private String id, img, tittle, des, ing, category;
+    private String id, img, tittle, des, ing, category, keywords, collections, devices;
 
     public ResModel() {
     }
 
-    public ResModel(String id, String img, String tittle, String des,  String ing, String category) {
+    public ResModel(String id, String img, String tittle, String des,  String ing,  String category, String keywords,
+                    String collections, String devices) {
         this.id = id;
         this.img = img;
         this.tittle = tittle;
         this.des = des;
         this.ing = ing;
         this.category = category;
+        this.keywords = keywords;
+        this.collections = collections;
+        this.devices = devices;
     }
 
     public String getId() {
@@ -61,5 +65,29 @@ public class ResModel  {
 
     public void setCategory(String category) {
         this.category = category;
+    }
+
+    public String getKeywords() {
+        return keywords;
+    }
+
+    public void setKeywords(String keywords) {
+        this.keywords = keywords;
+    }
+
+    public String getCollections() {
+        return collections;
+    }
+
+    public void setCollections(String collections) {
+        this.collections = collections;
+    }
+
+    public String getDevices() {
+        return devices;
+    }
+
+    public void setDevices(String devices) {
+        this.devices = devices;
     }
 }
