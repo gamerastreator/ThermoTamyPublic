@@ -11,7 +11,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.tiodev.vegtummy.Adapter.AdapterPopular;
+// Import FavoritesAdapter instead of AdapterPopular
+import com.tiodev.vegtummy.Adapter.FavoritesAdapter;
 import com.tiodev.vegtummy.RoomDB.AppDatabase;
 import com.tiodev.vegtummy.RoomDB.User;
 import com.tiodev.vegtummy.RoomDB.UserDao;
@@ -22,7 +23,8 @@ import java.util.List;
 public class FavoritesFragment extends Fragment {
 
     private RecyclerView favoritesRecyclerView;
-    private AdapterPopular adapterPopular;
+    // Change AdapterPopular to FavoritesAdapter
+    private FavoritesAdapter favoritesAdapter;
     private List<User> favoriteRecipesList;
     private TextView emptyFavoritesText;
     private AppDatabase appDatabase;
@@ -42,8 +44,9 @@ public class FavoritesFragment extends Fragment {
 
         favoritesRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         favoriteRecipesList = new ArrayList<>();
-        adapterPopular = new AdapterPopular(favoriteRecipesList, getContext());
-        favoritesRecyclerView.setAdapter(adapterPopular);
+        // Instantiate FavoritesAdapter
+        favoritesAdapter = new FavoritesAdapter(favoriteRecipesList, getContext());
+        favoritesRecyclerView.setAdapter(favoritesAdapter);
 
         // Initialize Room database
         appDatabase = Room.databaseBuilder(getContext().getApplicationContext(),
@@ -100,6 +103,8 @@ public class FavoritesFragment extends Fragment {
                 }
             }
         }
-        adapterPopular.notifyDataSetChanged();
+        if (favoritesAdapter != null) { // Add null check
+            favoritesAdapter.notifyDataSetChanged();
+        }
     }
 }
