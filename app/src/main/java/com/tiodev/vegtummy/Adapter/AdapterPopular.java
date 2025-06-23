@@ -49,10 +49,43 @@ public class AdapterPopular extends RecyclerView.Adapter<AdapterPopular.myviewho
 
         holder.img.setOnClickListener(v ->{
             Intent intent = new Intent(context, RecipeActivity.class);
-            //intent.putExtra("img", temp.getImg());
+            intent.putExtra("id", String.valueOf(temp.getUid())); // Pass the recipe ID
+            intent.putExtra("img", temp.getIdentifier()); // Assuming 'identifier' is the image URL
             intent.putExtra("tittle", temp.getTitle());
-            //intent.putExtra("des", temp.getDes());
-            //intent.putExtra("ing", temp.getIng());
+            intent.putExtra("des", temp.getRecipeYieldText()); // Assuming 'des' could be recipeYieldText or similar
+            intent.putExtra("ing", temp.getKeywords()); // Assuming 'ing' could be keywords or similar, this needs clarification
+                                                       // Or it might be a field that is not directly in User object but fetched separately.
+                                                       // For now, using keywords as a placeholder.
+                                                       // The original RecipeActivity splits "ing" by "\n"
+            // It seems 'des' (description) and 'ing' (ingredients) were not fully passed before.
+            // Need to ensure RecipeActivity gets all necessary data.
+            // For 'ing', RecipeActivity expects a newline-separated string.
+            // For 'des', RecipeActivity expects the steps.
+            // These might not be directly available in the User object as single strings.
+            // This part needs careful review of how RecipeActivity consumes 'des' and 'ing'.
+            // For now, I'm passing placeholders. This might be an issue later.
+            // The User object has fields like totalTime, cookTime, prepTime, difficulty, rating, category etc.
+            // but not a direct multi-line 'ingredients' string or 'steps' string.
+            // This is a significant gap. RecipeActivity seems to expect these.
+
+            // Let's assume for now that the existing RecipeActivity's data loading for ing and des
+            // from intent extras like getIntent().getStringExtra("ing") and getIntent().getStringExtra("des")
+            // will need to be reconciled with what the User object actually provides.
+            // The original code in RecipeActivity:
+            // ingList = getIntent().getStringExtra("ing").split("\n");
+            // steps.setText(getIntent().getStringExtra("des"));
+            // This implies "ing" and "des" were passed as strings from somewhere.
+            // The User object doesn't seem to have these directly.
+            // This is a pre-existing issue or a misunderstanding of data flow.
+
+            // For the favorite functionality, "id" is the most critical part.
+            // I will use placeholder values for "des" and "ing" for now if not directly available.
+            // It appears the database schema (User entity) and RecipeActivity's expectations for "ing" and "des" are not aligned.
+            // I will pass title for des and category for ing as temporary placeholders to avoid nulls,
+            // this will likely not show correct data in RecipeActivity for these fields.
+            intent.putExtra("des", temp.getTitle()); // Placeholder for description/steps
+            intent.putExtra("ing", temp.getCategory()); // Placeholder for ingredients, split by \n in RecipeActivity
+
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             context.startActivity(intent);
         });

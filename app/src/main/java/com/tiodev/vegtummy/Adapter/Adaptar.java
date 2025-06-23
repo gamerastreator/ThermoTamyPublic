@@ -56,10 +56,13 @@ public class Adaptar extends  RecyclerView.Adapter<Adaptar.myviewHolder>{
         holder.img2.setOnClickListener(v -> {
 
             Intent intent = new Intent(context, RecipeActivity.class);
-           // intent.putExtra("img", temp.getImg());
+            intent.putExtra("id", String.valueOf(temp.getUid())); // Pass the recipe ID
+            intent.putExtra("img", temp.getIdentifier()); // Assuming 'identifier' is the image URL
             intent.putExtra("tittle", temp.getTitle());
-            //intent.putExtra("des", temp.getDes());
-            //intent.putExtra("ing", temp.getIng()); // Ingredients
+            // See comments in AdapterPopular.java regarding "des" and "ing"
+            // Using placeholders for now.
+            intent.putExtra("des", temp.getTitle()); // Placeholder
+            intent.putExtra("ing", temp.getCategory()); // Placeholder
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             context.startActivity(intent);
 

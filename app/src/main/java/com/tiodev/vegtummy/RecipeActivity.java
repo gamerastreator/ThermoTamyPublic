@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.text.Html;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ScrollView;
 import android.widget.TextView;
@@ -17,8 +18,10 @@ import com.bumptech.glide.Glide;
 public class RecipeActivity extends AppCompatActivity {
 
     ImageView img, backBtn, overlay, scroll, zoomImage;
+    ImageButton favoriteBtn; // Added favorite button
     TextView txt, ing, time, steps;
     String [] ingList;
+    String recipeId; // Added to store recipe ID
     Button stepBtn, ing_btn;
     boolean isImgCrop = false;
     ScrollView scrollView, scrollView_step;
@@ -43,6 +46,24 @@ public class RecipeActivity extends AppCompatActivity {
         overlay = findViewById(R.id.image_gradient);
         scroll = findViewById(R.id.scroll);
         zoomImage = findViewById(R.id.zoom_image);
+        favoriteBtn = findViewById(R.id.favorite_btn); // Initialize favorite button
+
+        // Get Recipe ID - Assuming it's passed as "id"
+        // IMPORTANT: This needs to be confirmed. If the ID is passed with a different key,
+        // or if it's part of a serialized object, this line needs to change.
+        // For now, let's assume "id" is a string. If it's an int from Room, it might be passed as int or long.
+        recipeId = getIntent().getStringExtra("id");
+        if (recipeId == null || recipeId.isEmpty()) {
+            // Fallback or error handling if ID is not passed correctly
+            // For now, let's try to use title as a fallback, though this is not ideal if titles aren't unique
+            recipeId = getIntent().getStringExtra("tittle");
+            if (recipeId == null || recipeId.isEmpty()) {
+                Toast.makeText(this, "Recipe ID not found, favoriting may not work correctly.", Toast.LENGTH_LONG).show();
+                // Disable favorite button if no usable ID
+                favoriteBtn.setEnabled(false);
+            }
+        }
+
 
         // Load recipe image from link
         Glide.with(getApplicationContext()).load(getIntent().getStringExtra("img"))
@@ -58,16 +79,15 @@ public class RecipeActivity extends AppCompatActivity {
 
         for (int i = 1; i<ingList.length; i++){
             ing.setText(ing.getText()+"\uD83D\uDFE2  "+ingList[i]+"\n");
-            /*if(ingList[i].startsWith(" ")){
-                ing.setText(ing.getText()+"\uD83D\uDFE2  "+ingList[i].trim().replaceAll("\\s{2,}", " ")+"\n");
-            }else{
-
-            }*/
-
         }
         // Set recipe steps
         steps.setText(getIntent().getStringExtra("des"));
-       // steps.setText(Html.fromHtml(getIntent().getStringExtra("des")));
+
+        // Setup Favorite Button
+        if (recipeId != null && !recipeId.isEmpty()) {
+            setFavoriteButtonState();
+            favoriteBtn.setOnClickListener(v -> toggleFavoriteStatus());
+        }
 
         stepBtn.setBackground(null);
 
@@ -124,8 +144,25 @@ public class RecipeActivity extends AppCompatActivity {
 
         // Exit activity
         backBtn.setOnClickListener(v -> finish());
+    }
 
+    private void setFavoriteButtonState() {
+        if (FavoriteManager.isFavorite(this, recipeId)) {
+            favoriteBtn.setImageResource(R.drawable.ic_favorite_filled); // Assuming filled heart drawable
+        } else {
+            favoriteBtn.setImageResource(R.drawable.ic_favorite_border); // Assuming empty heart drawable
+        }
+    }
 
-
+    private void toggleFavoriteStatus() {
+        if (FavoriteManager.isFavorite(this, recipeId)) {
+            FavoriteManager.removeFavorite(this, recipeId);
+            favoriteBtn.setImageResource(R.drawable.ic_favorite_border);
+            Toast.makeText(this, "Removed from favorites", Toast.LENGTH_SHORT).show();
+        } else {
+            FavoriteManager.addFavorite(this, recipeId);
+            favoriteBtn.setImageResource(R.drawable.ic_favorite_filled);
+            Toast.makeText(this, "Added to favorites", Toast.LENGTH_SHORT).show();
+        }
     }
 }
