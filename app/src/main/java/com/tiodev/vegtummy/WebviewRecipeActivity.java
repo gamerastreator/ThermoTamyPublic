@@ -7,7 +7,9 @@ import android.webkit.WebResourceResponse;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.ImageButton; // Added
 import android.widget.ImageView;
+import android.widget.Toast; // Added
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -28,6 +30,9 @@ public class WebviewRecipeActivity extends AppCompatActivity {
 
     ImageView backBtn;
     WebView webview;
+    ImageButton favoriteBtnWebview; // Added
+    String recipeId; // Added to store recipe ID
+
     @SuppressLint("SetTextI18n")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,6 +42,29 @@ public class WebviewRecipeActivity extends AppCompatActivity {
         // Find views
         webview = findViewById(R.id.webView);
         backBtn = findViewById(R.id.back_btn);
+        favoriteBtnWebview = findViewById(R.id.favorite_btn_webview); // Initialize favorite button
+
+        // Get Recipe ID from Intent (to be added by SearchAdapter)
+        recipeId = getIntent().getStringExtra("id");
+
+        if (recipeId == null || recipeId.isEmpty()) {
+            // Fallback or error handling if ID is not passed correctly
+            // Try to use title as a fallback if SearchAdapter also passes title for ID, though not ideal.
+            // For now, if ID is truly missing, disable button.
+            // recipeId = getIntent().getStringExtra("tittle"); // Example fallback, but ID from UID is better
+            if (favoriteBtnWebview != null) { // Check if button exists before disabling
+                 Toast.makeText(this, "Recipe ID not found, favoriting disabled.", Toast.LENGTH_LONG).show();
+                 favoriteBtnWebview.setEnabled(false);
+                 favoriteBtnWebview.setVisibility(View.GONE); // Hide if not usable
+            }
+        } else {
+            if (favoriteBtnWebview != null) {
+                setFavoriteButtonState();
+                favoriteBtnWebview.setOnClickListener(v -> toggleFavoriteStatus());
+            }
+        }
+
+
         WebSettings webSettings = webview.getSettings();
         webSettings.setJavaScriptEnabled(true);
         webSettings.setBuiltInZoomControls(true);
@@ -122,11 +150,33 @@ public class WebviewRecipeActivity extends AppCompatActivity {
         webview.loadUrl("file:///android_asset/" + getIntent().getStringExtra("path"));
         // Set recipe title
         // Exit activity
-        backBtn.setOnClickListener(v -> finish());
-
-
-
+        if (backBtn != null) { // Ensure backBtn is not null if layout changes
+            backBtn.setOnClickListener(v -> finish());
+        }
     }
+
+    private void setFavoriteButtonState() {
+        if (recipeId == null || recipeId.isEmpty() || favoriteBtnWebview == null) return;
+        if (FavoriteManager.isFavorite(this, recipeId)) {
+            favoriteBtnWebview.setImageResource(R.drawable.ic_favorite_filled);
+        } else {
+            favoriteBtnWebview.setImageResource(R.drawable.ic_favorite_border);
+        }
+    }
+
+    private void toggleFavoriteStatus() {
+        if (recipeId == null || recipeId.isEmpty() || favoriteBtnWebview == null) return;
+        if (FavoriteManager.isFavorite(this, recipeId)) {
+            FavoriteManager.removeFavorite(this, recipeId);
+            favoriteBtnWebview.setImageResource(R.drawable.ic_favorite_border);
+            Toast.makeText(this, "Removed from favorites", Toast.LENGTH_SHORT).show();
+        } else {
+            FavoriteManager.addFavorite(this, recipeId);
+            favoriteBtnWebview.setImageResource(R.drawable.ic_favorite_filled);
+            Toast.makeText(this, "Added to favorites", Toast.LENGTH_SHORT).show();
+        }
+    }
+
     public String loadJSONFromAsset(String name) {
         String json = null;
         try {
