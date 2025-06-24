@@ -60,7 +60,8 @@ public class WebviewRecipeActivity extends AppCompatActivity {
         } else {
             if (favoriteBtnWebview != null) {
                 setFavoriteButtonState();
-                favoriteBtnWebview.setOnClickListener(v -> toggleFavoriteStatus());
+                // Changed to call handleFavoriteButtonClick which will show the dialog
+                favoriteBtnWebview.setOnClickListener(v -> handleFavoriteButtonClick());
             }
         }
 
@@ -155,27 +156,82 @@ public class WebviewRecipeActivity extends AppCompatActivity {
         }
     }
 
+import androidx.appcompat.app.AlertDialog; // Added for dialog
+import java.util.List; // Added for List
+// Ensure FavoriteList and FavoriteListManager are imported if not already
+// import com.tiodev.vegtummy.FavoriteList;
+// import com.tiodev.vegtummy.FavoriteListManager;
+
+
+public class WebviewRecipeActivity extends AppCompatActivity {
+    // ... (existing declarations) ...
+
     private void setFavoriteButtonState() {
-        if (recipeId == null || recipeId.isEmpty() || favoriteBtnWebview == null) return;
-        if (FavoriteManager.isFavorite(this, recipeId)) {
+        if (recipeId == null || recipeId.isEmpty() || favoriteBtnWebview == null) {
+            if(favoriteBtnWebview != null) favoriteBtnWebview.setImageResource(R.drawable.ic_favorite_border);
+            return;
+        }
+        // Use FavoriteListManager now
+        if (FavoriteListManager.isRecipeInAnyList(this, recipeId)) {
             favoriteBtnWebview.setImageResource(R.drawable.ic_favorite_filled);
         } else {
             favoriteBtnWebview.setImageResource(R.drawable.ic_favorite_border);
         }
     }
 
-    private void toggleFavoriteStatus() {
-        if (recipeId == null || recipeId.isEmpty() || favoriteBtnWebview == null) return;
-        if (FavoriteManager.isFavorite(this, recipeId)) {
-            FavoriteManager.removeFavorite(this, recipeId);
-            favoriteBtnWebview.setImageResource(R.drawable.ic_favorite_border);
-            Toast.makeText(this, "Removed from favorites", Toast.LENGTH_SHORT).show();
-        } else {
-            FavoriteManager.addFavorite(this, recipeId);
-            favoriteBtnWebview.setImageResource(R.drawable.ic_favorite_filled);
-            Toast.makeText(this, "Added to favorites", Toast.LENGTH_SHORT).show();
+    // This method will be replaced by logic to show the "manage lists" dialog
+    private void handleFavoriteButtonClick() {
+        if (recipeId == null || recipeId.isEmpty()) {
+            Toast.makeText(this, "Recipe ID not found.", Toast.LENGTH_SHORT).show();
+            return;
         }
+        showManageFavoriteListsDialog();
     }
+
+    private void showManageFavoriteListsDialog() {
+        if (recipeId == null || recipeId.isEmpty()) return;
+
+        List<FavoriteList> allLists = FavoriteListManager.getFavoriteLists(this);
+        final boolean[] checkedItems = new boolean[allLists.size()];
+        final String[] listIds = new String[allLists.size()];
+        String[] listNames = new String[allLists.size()];
+
+        for (int i = 0; i < allLists.size(); i++) {
+            FavoriteList list = allLists.get(i);
+            listIds[i] = list.getId();
+            listNames[i] = list.getName();
+            checkedItems[i] = FavoriteListManager.isRecipeInList(this, list.getId(), recipeId);
+        }
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Add to Favorite Lists");
+        builder.setMultiChoiceItems(listNames, checkedItems, (dialog, which, isChecked) -> {
+            checkedItems[which] = isChecked;
+        });
+
+        builder.setPositiveButton("Save", (dialog, which) -> {
+            for (int i = 0; i < listIds.length; i++) {
+                String listId = listIds[i];
+                if (checkedItems[i]) {
+                    FavoriteListManager.addRecipeToList(this, listId, recipeId);
+                } else {
+                    FavoriteListManager.removeRecipeFromList(this, listId, recipeId);
+                }
+            }
+            setFavoriteButtonState(); // Update the main heart icon
+            Toast.makeText(WebviewRecipeActivity.this, "Favorite lists updated.", Toast.LENGTH_SHORT).show();
+        });
+
+        builder.setNegativeButton("Cancel", (dialog, which) -> dialog.dismiss());
+
+        AlertDialog dialog = builder.create();
+        dialog.show();
+    }
+
+    // In onCreate, the favoriteBtnWebview listener should call handleFavoriteButtonClick
+    // Original: favoriteBtnWebview.setOnClickListener(v -> toggleFavoriteStatus());
+    // Change to: favoriteBtnWebview.setOnClickListener(v -> handleFavoriteButtonClick());
+
 
     public String loadJSONFromAsset(String name) {
         String json = null;

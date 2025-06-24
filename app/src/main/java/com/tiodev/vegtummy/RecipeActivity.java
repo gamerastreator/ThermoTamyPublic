@@ -86,8 +86,13 @@ public class RecipeActivity extends AppCompatActivity {
         // Setup Favorite Button
         if (recipeId != null && !recipeId.isEmpty()) {
             setFavoriteButtonState();
-            favoriteBtn.setOnClickListener(v -> toggleFavoriteStatus());
+            // Changed to call handleFavoriteButtonClick which will show the dialog
+            if(favoriteBtn != null) favoriteBtn.setOnClickListener(v -> handleFavoriteButtonClick());
+        } else if (favoriteBtn != null) {
+            favoriteBtn.setEnabled(false); // Ensure button is disabled if no recipeId
+            favoriteBtn.setVisibility(View.GONE);
         }
+
 
         stepBtn.setBackground(null);
 
@@ -147,22 +152,85 @@ public class RecipeActivity extends AppCompatActivity {
     }
 
     private void setFavoriteButtonState() {
-        if (FavoriteManager.isFavorite(this, recipeId)) {
-            favoriteBtn.setImageResource(R.drawable.ic_favorite_filled); // Assuming filled heart drawable
-        } else {
-            favoriteBtn.setImageResource(R.drawable.ic_favorite_border); // Assuming empty heart drawable
+        // Use FavoriteListManager now
+        if (recipeId != null && !recipeId.isEmpty() && favoriteBtn != null) {
+            if (FavoriteListManager.isRecipeInAnyList(this, recipeId)) {
+                favoriteBtn.setImageResource(R.drawable.ic_favorite_filled);
+            } else {
+                favoriteBtn.setImageResource(R.drawable.ic_favorite_border);
+            }
+        } else if (favoriteBtn != null) {
+            // If recipeId is null or button is null somehow, default to border
+             favoriteBtn.setImageResource(R.drawable.ic_favorite_border);
         }
     }
 
-    private void toggleFavoriteStatus() {
-        if (FavoriteManager.isFavorite(this, recipeId)) {
-            FavoriteManager.removeFavorite(this, recipeId);
-            favoriteBtn.setImageResource(R.drawable.ic_favorite_border);
-            Toast.makeText(this, "Removed from favorites", Toast.LENGTH_SHORT).show();
-        } else {
-            FavoriteManager.addFavorite(this, recipeId);
-            favoriteBtn.setImageResource(R.drawable.ic_favorite_filled);
-            Toast.makeText(this, "Added to favorites", Toast.LENGTH_SHORT).show();
+    // This method will be replaced by logic to show the "manage lists" dialog
+    private void handleFavoriteButtonClick() {
+        if (recipeId == null || recipeId.isEmpty()) {
+            Toast.makeText(this, "Recipe ID not found.", Toast.LENGTH_SHORT).show();
+            return;
         }
+        // TODO: Implement and show the dialog here to manage recipe's presence in lists.
+        // For now, let's just log that the button was clicked.
+        // Log.d("RecipeActivity", "Favorite button clicked. recipeId: " + recipeId + ". Dialog to be implemented.");
+        // Toast.makeText(this, "Manage favorite lists dialog (TODO)", Toast.LENGTH_SHORT).show();
+        showManageFavoriteListsDialog();
     }
+
+    private void showManageFavoriteListsDialog() {
+        if (recipeId == null || recipeId.isEmpty()) return;
+
+        List<FavoriteList> allLists = FavoriteListManager.getFavoriteLists(this);
+        // For storing the checked state of each list in the dialog
+        final boolean[] checkedItems = new boolean[allLists.size()];
+        // For storing the list IDs corresponding to the checkboxes
+        final String[] listIds = new String[allLists.size()];
+        // For storing the list names to display
+        String[] listNames = new String[allLists.size()];
+
+        for (int i = 0; i < allLists.size(); i++) {
+            FavoriteList list = allLists.get(i);
+            listIds[i] = list.getId();
+            listNames[i] = list.getName();
+            checkedItems[i] = FavoriteListManager.isRecipeInList(this, list.getId(), recipeId);
+        }
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Add to Favorite Lists");
+        builder.setMultiChoiceItems(listNames, checkedItems, (dialog, which, isChecked) -> {
+            // This will be called when a checkbox is clicked.
+            // Update the checkedItems array.
+            checkedItems[which] = isChecked;
+        });
+
+        builder.setPositiveButton("Save", (dialog, which) -> {
+            for (int i = 0; i < listIds.length; i++) {
+                String listId = listIds[i];
+                if (checkedItems[i]) {
+                    // If checked, add recipe to this list (manager handles duplicates)
+                    FavoriteListManager.addRecipeToList(this, listId, recipeId);
+                } else {
+                    // If unchecked, remove recipe from this list
+                    FavoriteListManager.removeRecipeFromList(this, listId, recipeId);
+                }
+            }
+            setFavoriteButtonState(); // Update the main heart icon
+            Toast.makeText(RecipeActivity.this, "Favorite lists updated.", Toast.LENGTH_SHORT).show();
+        });
+
+        builder.setNegativeButton("Cancel", (dialog, which) -> dialog.dismiss());
+
+        // Optional: "Create New List" button in the dialog
+        // This makes the dialog more complex, might be better as a separate flow first from FavoritesFragment
+        // For now, let's skip it in this dialog to keep it focused. User can create lists in FavoritesFragment.
+
+        AlertDialog dialog = builder.create();
+        dialog.show();
+    }
+
+
+    // In onCreate, the favoriteBtn listener should call handleFavoriteButtonClick
+    // Original: favoriteBtn.setOnClickListener(v -> toggleFavoriteStatus());
+    // Change to: favoriteBtn.setOnClickListener(v -> handleFavoriteButtonClick());
 }
