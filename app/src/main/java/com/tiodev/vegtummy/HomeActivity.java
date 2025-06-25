@@ -69,6 +69,8 @@ public class HomeActivity extends AppCompatActivity {
                     selectedFragment = new HomeFragment();
                 } else if (itemId == R.id.navigation_favorites) {
                     selectedFragment = new FavoritesFragment();
+                } else if (itemId == R.id.navigation_collections) {
+                    selectedFragment = new CollectionsFragment();
                 }
 
                 if (selectedFragment != null) {

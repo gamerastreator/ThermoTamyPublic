@@ -2,4 +2,29 @@
     <string name="app_name">VegTummy</string>
     <string name="privacy_policy_url">https://makesdigi.com/recipeApp/privacy.html</string>
     <string name="abt_dev">https://makesdigi.com/</string>
+    <string name="navigation_collections_title">Collections</string>
+
+    <!-- Favorites Fragment Strings -->
+    <string name="favorites_title">Your Favorite Lists</string>
+    <string name="empty_favorites_default_text">No favorite lists yet! Tap \'+\' to create one.</string>
+    <string name="fab_create_list_content_description">Create New Favorite List</string>
+    <string name="hint_list_name">List Name</string>
+    <string name="button_create">Create</string>
+    <string name="toast_list_created">List \'%1$s\' created.</string>
+    <string name="toast_failed_create_list">Failed to create list.</string>
+    <string name="toast_list_name_empty">List name cannot be empty.</string>
+    <string name="button_cancel">Cancel</string>
+    <string name="toast_error_opening_list">Error opening list.</string>
+    <string name="context_menu_title_manage_list">Manage List: %1$s</string>
+    <string name="dialog_title_rename_list">Rename List</string>
+    <string name="button_rename">Rename</string>
+    <string name="toast_list_renamed">List renamed to \'%1$s\'.</string>
+    <string name="toast_failed_rename_list">Failed to rename list.</string>
+    <string name="dialog_title_delete_list">Delete List</string>
+    <string name="dialog_message_delete_list_confirm">Are you sure you want to delete the list \'%1$s\'? This action cannot be undone.</string>
+    <string name="button_delete">Delete</string>
+    <string name="toast_list_deleted">List \'%1$s\' deleted.</string>
+    <string name="toast_failed_delete_list">Failed to delete list.</string>
+    <string name="menu_rename_list">@string/dialog_title_rename_list</string> <!-- Reuses rename dialog title -->
+    <string name="menu_delete_list">@string/dialog_title_delete_list</string> <!-- Reuses delete dialog title -->
 </resources>

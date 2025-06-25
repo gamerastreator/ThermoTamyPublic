@@ -115,28 +115,28 @@ public class FavoritesFragment extends Fragment implements FavoriteListNameAdapt
     private void showCreateListDialog() {
         if (getContext() == null) return;
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-        builder.setTitle("Create New Favorite List");
+        builder.setTitle(R.string.fab_create_list_content_description); // Reuses existing string
 
         final EditText input = new EditText(getContext());
         input.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_CAP_WORDS);
-        input.setHint("List Name");
+        input.setHint(R.string.hint_list_name);
         builder.setView(input);
 
-        builder.setPositiveButton("Create", (dialog, which) -> {
+        builder.setPositiveButton(R.string.button_create, (dialog, which) -> {
             String listName = input.getText().toString().trim();
             if (!listName.isEmpty()) {
                 FavoriteList newList = FavoriteListManager.createFavoriteList(getContext(), listName);
                 if (newList != null) {
                     loadFavoriteLists(); // Refresh the list
-                    Toast.makeText(getContext(), "List '" + listName + "' created.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), getString(R.string.toast_list_created, listName), Toast.LENGTH_SHORT).show();
                 } else {
-                    Toast.makeText(getContext(), "Failed to create list.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), R.string.toast_failed_create_list, Toast.LENGTH_SHORT).show();
                 }
             } else {
-                Toast.makeText(getContext(), "List name cannot be empty.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), R.string.toast_list_name_empty, Toast.LENGTH_SHORT).show();
             }
         });
-        builder.setNegativeButton("Cancel", (dialog, which) -> dialog.cancel());
+        builder.setNegativeButton(R.string.button_cancel, (dialog, which) -> dialog.cancel());
         builder.show();
     }
 
@@ -151,7 +151,7 @@ public class FavoritesFragment extends Fragment implements FavoriteListNameAdapt
                     .addToBackStack(null) // Add to back stack so user can navigate back to the list of lists
                     .commit();
         } else {
-            Toast.makeText(getContext(), "Error opening list.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), R.string.toast_error_opening_list, Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -172,7 +172,7 @@ public class FavoritesFragment extends Fragment implements FavoriteListNameAdapt
         if (getActivity() != null && selectedFavoriteListForContextMenu != null) {
             MenuInflater inflater = getActivity().getMenuInflater();
             inflater.inflate(R.menu.favorite_list_context_menu, menu);
-            menu.setHeaderTitle("Manage List: " + selectedFavoriteListForContextMenu.getName());
+            menu.setHeaderTitle(getString(R.string.context_menu_title_manage_list, selectedFavoriteListForContextMenu.getName()));
         }
     }
 
@@ -197,45 +197,46 @@ public class FavoritesFragment extends Fragment implements FavoriteListNameAdapt
     private void showRenameListDialog(final FavoriteList listToRename) {
         if (getContext() == null) return;
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-        builder.setTitle("Rename List");
+        builder.setTitle(R.string.dialog_title_rename_list);
 
         final EditText input = new EditText(getContext());
         input.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_CAP_WORDS);
         input.setText(listToRename.getName());
+        input.setHint(R.string.hint_list_name); // Also good to have a hint here
         input.setSelection(input.getText().length()); // Cursor at the end
         builder.setView(input);
 
-        builder.setPositiveButton("Rename", (dialog, which) -> {
+        builder.setPositiveButton(R.string.button_rename, (dialog, which) -> {
             String newName = input.getText().toString().trim();
             if (!newName.isEmpty() && !newName.equals(listToRename.getName())) {
                 if (FavoriteListManager.renameFavoriteList(getContext(), listToRename.getId(), newName)) {
                     loadFavoriteLists(); // Refresh
-                    Toast.makeText(getContext(), "List renamed to '" + newName + "'.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), getString(R.string.toast_list_renamed, newName), Toast.LENGTH_SHORT).show();
                 } else {
-                    Toast.makeText(getContext(), "Failed to rename list.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), R.string.toast_failed_rename_list, Toast.LENGTH_SHORT).show();
                 }
             } else if (newName.isEmpty()) {
-                Toast.makeText(getContext(), "List name cannot be empty.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), R.string.toast_list_name_empty, Toast.LENGTH_SHORT).show();
             }
         });
-        builder.setNegativeButton("Cancel", (dialog, which) -> dialog.cancel());
+        builder.setNegativeButton(R.string.button_cancel, (dialog, which) -> dialog.cancel());
         builder.show();
     }
 
     private void showDeleteListConfirmDialog(final FavoriteList listToDelete) {
         if (getContext() == null) return;
         new AlertDialog.Builder(getContext())
-                .setTitle("Delete List")
-                .setMessage("Are you sure you want to delete the list '" + listToDelete.getName() + "'? This action cannot be undone.")
-                .setPositiveButton("Delete", (dialog, which) -> {
+                .setTitle(R.string.dialog_title_delete_list)
+                .setMessage(getString(R.string.dialog_message_delete_list_confirm, listToDelete.getName()))
+                .setPositiveButton(R.string.button_delete, (dialog, which) -> {
                     if (FavoriteListManager.deleteFavoriteList(getContext(), listToDelete.getId())) {
                         loadFavoriteLists(); // Refresh
-                        Toast.makeText(getContext(), "List '" + listToDelete.getName() + "' deleted.", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getContext(), getString(R.string.toast_list_deleted, listToDelete.getName()), Toast.LENGTH_SHORT).show();
                     } else {
-                        Toast.makeText(getContext(), "Failed to delete list.", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getContext(), R.string.toast_failed_delete_list, Toast.LENGTH_SHORT).show();
                     }
                 })
-                .setNegativeButton("Cancel", null)
+                .setNegativeButton(R.string.button_cancel, null)
                 .setIcon(android.R.drawable.ic_dialog_alert)
                 .show();
     }
