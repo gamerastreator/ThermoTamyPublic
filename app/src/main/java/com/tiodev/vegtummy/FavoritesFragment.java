@@ -139,19 +139,24 @@ public class FavoritesFragment extends Fragment implements FavoriteListNameAdapt
         builder.show();
     }
 
+import android.content.Intent; // Added for Intent
+
+// ... (other imports)
+
+public class FavoritesFragment extends Fragment implements FavoriteListNameAdapter.OnFavoriteListClickListener {
+
+    // ... (existing code) ...
+
     @Override
     public void onFavoriteListClick(FavoriteList favoriteList) {
-        if (getActivity() != null && favoriteList != null) {
-            FavoriteRecipeListFragment recipeListFragment = FavoriteRecipeListFragment.newInstance(favoriteList.getId());
-
-            // Perform fragment transaction
-            // Assuming R.id.fragment_container is the ID of the FrameLayout in HomeActivity
-            getParentFragmentManager().beginTransaction()
-                    .replace(R.id.fragment_container, recipeListFragment)
-                    .addToBackStack(null) // Add to back stack so user can navigate back to the list of lists
-                    .commit();
+        if (getActivity() != null && favoriteList != null && favoriteList.getRecipeIds() != null) {
+            Intent intent = new Intent(getActivity(), SearchActivity.class);
+            intent.putExtra(SearchActivity.EXTRA_FAVORITE_LIST_NAME, favoriteList.getName());
+            // getRecipeIds() returns List<String>, ensure SearchActivity can handle ArrayList<String>
+            intent.putStringArrayListExtra(SearchActivity.EXTRA_FAVORITE_RECIPE_UID_LIST, new ArrayList<>(favoriteList.getRecipeIds()));
+            startActivity(intent);
         } else {
-            Toast.makeText(getContext(), "Error opening list.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), "Error opening list or list is empty.", Toast.LENGTH_SHORT).show();
         }
     }
 
