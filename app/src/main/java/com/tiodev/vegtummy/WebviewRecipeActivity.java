@@ -55,7 +55,7 @@ public class WebviewRecipeActivity extends AppCompatActivity {
             if (favoriteBtnWebview != null) { // Check if button exists before disabling
                  Toast.makeText(this, "Recipe ID not found, favoriting disabled.", Toast.LENGTH_LONG).show();
                  favoriteBtnWebview.setEnabled(false);
-                 favoriteBtnWebview.setVisibility(View.GONE); // Hide if not usable
+                 //favoriteBtnWebview.setVisibility(View.GONE); // Hide if not usable
             }
         } else {
             if (favoriteBtnWebview != null) {

@@ -101,7 +101,7 @@ public class FavoriteRecipeListFragment extends Fragment {
             listNameTitleTextView.setText("Favorite List Not Found");
             emptyListTextView.setVisibility(View.VISIBLE);
             recipeRecyclerView.setVisibility(View.GONE);
-            Toast.makeText(getContext(), "Could not load the favorite list.", Toast.LONG_SHORT).show();
+           // Toast.makeText(getContext(), "Could not load the favorite list.", Toast.LONG_SHORT).show();
         }
     }
 
@@ -129,7 +129,7 @@ public class FavoriteRecipeListFragment extends Fragment {
 
     private void loadRecipesForList() {
         if (getContext() == null || currentFavoriteList == null || appDatabase == null) {
-            Log.e("FavRecipeListFrag", "Context, currentFavoriteList, or appDatabase is null in loadRecipesForList.");
+            //Log.e("FavRecipeListFrag", "Context, currentFavoriteList, or appDatabase is null in loadRecipesForList.");
             emptyListTextView.setVisibility(View.VISIBLE);
             recipeRecyclerView.setVisibility(View.GONE);
             return;
@@ -153,14 +153,14 @@ public class FavoriteRecipeListFragment extends Fragment {
                         recipeList.add(recipe);
                     }
                 } catch (NumberFormatException e) {
-                    Log.e("FavRecipeListFrag", "Invalid recipe UID format: " + uidStr, e);
+                    //Log.e("FavRecipeListFrag", "Invalid recipe UID format: " + uidStr, e);
                 }
             }
         }
         if (recipesAdapter != null) {
             recipesAdapter.notifyDataSetChanged();
         } else {
-             Log.e("FavRecipeListFrag", "recipesAdapter is null in loadRecipesForList.");
+            // Log.e("FavRecipeListFrag", "recipesAdapter is null in loadRecipesForList.");
         }
     }
 }
