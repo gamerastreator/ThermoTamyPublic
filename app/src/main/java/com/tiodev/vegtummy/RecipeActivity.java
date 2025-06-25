@@ -1,9 +1,9 @@
 package com.tiodev.vegtummy;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.annotation.SuppressLint;
-import android.app.AlertDialog;
 import android.os.Bundle;
 import android.text.Html;
 import android.view.View;

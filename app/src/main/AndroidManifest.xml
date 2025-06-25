@@ -36,7 +36,14 @@
             android:exported="false" />
         <activity
             android:name="com.tiodev.vegtummy.WebviewRecipeActivity"
-            android:exported="false" />
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:scheme="vegtummy" android:host="recipe" />
+            </intent-filter>
+        </activity>
         <activity
             android:name="com.tiodev.vegtummy.MainActivity"
             android:exported="true" />
