@@ -104,7 +104,10 @@ public class FavoritesFragment extends Fragment implements FavoriteListNameAdapt
             favoritesRecyclerView.setVisibility(View.VISIBLE);
         }
         if (listNameAdapter != null) {
-            listNameAdapter.updateData(favoriteMasterList); // Use adapter's update method
+            // The favoriteMasterList instance (which the adapter holds a reference to)
+            // has been updated (cleared and new items added).
+            // So, just notifying the adapter should be sufficient.
+            listNameAdapter.notifyDataSetChanged();
         }
     }
 
