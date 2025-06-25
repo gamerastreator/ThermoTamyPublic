@@ -52,11 +52,12 @@ public class SearchAdapter extends  RecyclerView.Adapter<SearchAdapter.Searchvie
         holder.txt.setText(data.get(position).getTitle());
         holder.item.setOnClickListener(v ->{
             Intent intent = new Intent(context, WebviewRecipeActivity.class);
-           // intent.putExtra("img", temp.getImg());
+            intent.putExtra("id", String.valueOf(temp.getUid())); // Pass the recipe UID as "id"
             intent.putExtra("tittle", temp.getTitle());
             intent.putExtra("path", html.getPath());
-           // intent.putExtra("des", temp.getDes());
-           // intent.putExtra("ing", temp.getIng());
+            // intent.putExtra("img", temp.getIdentifier()); // Potentially pass image identifier if needed by WebviewRecipeActivity
+            // intent.putExtra("des", temp.getRecipeYieldText()); // Placeholder if needed
+            // intent.putExtra("ing", temp.getKeywords()); // Placeholder if needed
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             context.startActivity(intent);
         });

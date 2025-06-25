@@ -4,32 +4,75 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    app:layoutDescription="@xml/activity_recipe_scene"
-    tools:context=".RecipeActivity">
+    tools:context=".WebviewRecipeActivity">
 
+    <!-- Simple Top Bar Area -->
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/top_bar_webview"
+        android:layout_width="0dp"
+        android:layout_height="?attr/actionBarSize"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:paddingStart="8dp"
+        android:paddingEnd="8dp">
+
+        <ImageView
+            android:id="@+id/back_btn"
+            android:layout_width="45dp"
+            android:layout_height="45dp"
+            android:background="@drawable/card_back_btn"
+            android:clickable="true"
+            android:focusable="true"
+            android:foregroundGravity="center"
+            android:hapticFeedbackEnabled="true"
+            android:padding="10dp"
+            android:src="@drawable/back_icon"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:contentDescription="Back Button" />
+
+        <ImageButton
+            android:id="@+id/favorite_btn_webview"
+            android:layout_width="45dp"
+            android:layout_height="45dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:clickable="true"
+            android:focusable="true"
+            android:padding="8dp"
+            android:src="@drawable/ic_favorite_border"
+            app:tint="@color/purple_500"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:contentDescription="Favorite Button" />
+
+        <ImageButton
+            android:id="@+id/share_btn_webview"
+            android:layout_width="45dp"
+            android:layout_height="45dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:clickable="true"
+            android:focusable="true"
+            android:padding="8dp"
+            android:src="@android:drawable/ic_menu_share"
+            app:tint="@color/purple_500"
+            app:layout_constraintEnd_toStartOf="@+id/favorite_btn_webview"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_marginEnd="8dp"
+            android:contentDescription="Share Recipe Button" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
     <WebView
         android:id="@+id/webView"
-        android:layout_width="409dp"
-        android:layout_height="686dp"
-        tools:layout_editor_absoluteX="3dp"
-        tools:layout_editor_absoluteY="-26dp">
-
-    </WebView>
-
-    <ImageView
-        android:id="@+id/back_btn"
-        android:layout_width="45dp"
-        android:layout_height="45dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="4dp"
-        android:background="@drawable/card_back_btn"
-        android:clickable="false"
-        android:foregroundGravity="center"
-        android:hapticFeedbackEnabled="true"
-        android:padding="2dp"
-        android:src="@drawable/back_icon"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintTop_toBottomOf="@id/top_bar_webview"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/webView" />
+        app:layout_constraintEnd_toEndOf="parent" />
 
 </androidx.constraintlayout.motion.widget.MotionLayout>
