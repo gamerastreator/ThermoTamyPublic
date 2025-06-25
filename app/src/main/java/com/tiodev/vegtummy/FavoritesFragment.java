@@ -1,5 +1,6 @@
 package com.tiodev.vegtummy;
 
+import android.content.Intent; // Ensure this import is present
 import android.os.Bundle;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -139,20 +140,12 @@ public class FavoritesFragment extends Fragment implements FavoriteListNameAdapt
         builder.show();
     }
 
-import android.content.Intent; // Added for Intent
-
-// ... (other imports)
-
-public class FavoritesFragment extends Fragment implements FavoriteListNameAdapter.OnFavoriteListClickListener {
-
-    // ... (existing code) ...
-
+    // This is the correctly modified onFavoriteListClick method
     @Override
     public void onFavoriteListClick(FavoriteList favoriteList) {
         if (getActivity() != null && favoriteList != null && favoriteList.getRecipeIds() != null) {
             Intent intent = new Intent(getActivity(), SearchActivity.class);
             intent.putExtra(SearchActivity.EXTRA_FAVORITE_LIST_NAME, favoriteList.getName());
-            // getRecipeIds() returns List<String>, ensure SearchActivity can handle ArrayList<String>
             intent.putStringArrayListExtra(SearchActivity.EXTRA_FAVORITE_RECIPE_UID_LIST, new ArrayList<>(favoriteList.getRecipeIds()));
             startActivity(intent);
         } else {
@@ -160,14 +153,17 @@ public class FavoritesFragment extends Fragment implements FavoriteListNameAdapt
         }
     }
 
+    // The rest of the methods (onFavoriteListLongClick, onCreateContextMenu, etc.)
+    // are part of the original, correct class structure and should remain.
+    // The SEARCH block above was intended to remove the *second* erroneous class definition.
+    // The key is that the corrected onFavoriteListClick should be part of the *first* class definition.
+
+    // The following methods are part of the FIRST (correct) class definition and should remain
     @Override
     public void onFavoriteListLongClick(FavoriteList favoriteList, View view) {
         selectedFavoriteListForContextMenu = favoriteList;
-        // The view passed is the item view, which is already registered for context menu.
-        // So, we just need to ensure the fragment's onCreateContextMenu is called.
-        // The RecyclerView item should have android:longClickable="true" (default for ConstraintLayout with listener)
         if (getActivity() != null) {
-            getActivity().openContextMenu(view); // Open context menu on the specific view
+            getActivity().openContextMenu(view);
         }
     }
 
@@ -207,14 +203,14 @@ public class FavoritesFragment extends Fragment implements FavoriteListNameAdapt
         final EditText input = new EditText(getContext());
         input.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_CAP_WORDS);
         input.setText(listToRename.getName());
-        input.setSelection(input.getText().length()); // Cursor at the end
+        input.setSelection(input.getText().length());
         builder.setView(input);
 
         builder.setPositiveButton("Rename", (dialog, which) -> {
             String newName = input.getText().toString().trim();
             if (!newName.isEmpty() && !newName.equals(listToRename.getName())) {
                 if (FavoriteListManager.renameFavoriteList(getContext(), listToRename.getId(), newName)) {
-                    loadFavoriteLists(); // Refresh
+                    loadFavoriteLists();
                     Toast.makeText(getContext(), "List renamed to '" + newName + "'.", Toast.LENGTH_SHORT).show();
                 } else {
                     Toast.makeText(getContext(), "Failed to rename list.", Toast.LENGTH_SHORT).show();
@@ -234,7 +230,7 @@ public class FavoritesFragment extends Fragment implements FavoriteListNameAdapt
                 .setMessage("Are you sure you want to delete the list '" + listToDelete.getName() + "'? This action cannot be undone.")
                 .setPositiveButton("Delete", (dialog, which) -> {
                     if (FavoriteListManager.deleteFavoriteList(getContext(), listToDelete.getId())) {
-                        loadFavoriteLists(); // Refresh
+                        loadFavoriteLists();
                         Toast.makeText(getContext(), "List '" + listToDelete.getName() + "' deleted.", Toast.LENGTH_SHORT).show();
                     } else {
                         Toast.makeText(getContext(), "Failed to delete list.", Toast.LENGTH_SHORT).show();
