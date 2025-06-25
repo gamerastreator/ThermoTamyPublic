@@ -156,22 +156,12 @@ public class WebviewRecipeActivity extends AppCompatActivity {
         }
     }
 
-import androidx.appcompat.app.AlertDialog; // Added for dialog
-import java.util.List; // Added for List
-// Ensure FavoriteList and FavoriteListManager are imported if not already
-// import com.tiodev.vegtummy.FavoriteList;
-// import com.tiodev.vegtummy.FavoriteListManager;
-
-
-public class WebviewRecipeActivity extends AppCompatActivity {
-    // ... (existing declarations) ...
-
+    // Corrected: Methods for favorite list management dialog
     private void setFavoriteButtonState() {
         if (recipeId == null || recipeId.isEmpty() || favoriteBtnWebview == null) {
             if(favoriteBtnWebview != null) favoriteBtnWebview.setImageResource(R.drawable.ic_favorite_border);
             return;
         }
-        // Use FavoriteListManager now
         if (FavoriteListManager.isRecipeInAnyList(this, recipeId)) {
             favoriteBtnWebview.setImageResource(R.drawable.ic_favorite_filled);
         } else {
@@ -179,7 +169,6 @@ public class WebviewRecipeActivity extends AppCompatActivity {
         }
     }
 
-    // This method will be replaced by logic to show the "manage lists" dialog
     private void handleFavoriteButtonClick() {
         if (recipeId == null || recipeId.isEmpty()) {
             Toast.makeText(this, "Recipe ID not found.", Toast.LENGTH_SHORT).show();
@@ -203,7 +192,7 @@ public class WebviewRecipeActivity extends AppCompatActivity {
             checkedItems[i] = FavoriteListManager.isRecipeInList(this, list.getId(), recipeId);
         }
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        androidx.appcompat.app.AlertDialog.Builder builder = new androidx.appcompat.app.AlertDialog.Builder(this);
         builder.setTitle("Add to Favorite Lists");
         builder.setMultiChoiceItems(listNames, checkedItems, (dialog, which, isChecked) -> {
             checkedItems[which] = isChecked;
@@ -224,14 +213,10 @@ public class WebviewRecipeActivity extends AppCompatActivity {
 
         builder.setNegativeButton("Cancel", (dialog, which) -> dialog.dismiss());
 
-        AlertDialog dialog = builder.create();
+        androidx.appcompat.app.AlertDialog dialog = builder.create();
         dialog.show();
     }
-
-    // In onCreate, the favoriteBtnWebview listener should call handleFavoriteButtonClick
-    // Original: favoriteBtnWebview.setOnClickListener(v -> toggleFavoriteStatus());
-    // Change to: favoriteBtnWebview.setOnClickListener(v -> handleFavoriteButtonClick());
-
+    // End of corrected methods for favorite list management
 
     public String loadJSONFromAsset(String name) {
         String json = null;
