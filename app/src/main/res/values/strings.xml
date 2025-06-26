@@ -27,4 +27,8 @@
     <string name="toast_failed_delete_list">Failed to delete list.</string>
     <string name="menu_rename_list">@string/dialog_title_rename_list</string> <!-- Reuses rename dialog title -->
     <string name="menu_delete_list">@string/dialog_title_delete_list</string> <!-- Reuses delete dialog title -->
+
+    <!-- Collections Fragment Search and Count -->
+    <string name="collections_search_hint">Search collections…</string>
+    <string name="collections_count_format">Total Collections: %d</string>
 </resources>

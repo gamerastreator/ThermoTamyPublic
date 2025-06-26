@@ -22,4 +22,8 @@
     <string name="toast_list_deleted">Lista \'%1$s\' eliminada.</string>
     <string name="toast_failed_delete_list">Error al eliminar la lista.</string>
     <!-- menu_rename_list and menu_delete_list will use the Spanish versions from dialog_title_rename_list and dialog_title_delete_list automatically -->
+
+    <!-- Collections Fragment Search and Count - Spanish -->
+    <string name="collections_search_hint">Buscar colecciones…</string>
+    <string name="collections_count_format">Total Colecciones: %d</string>
 </resources>

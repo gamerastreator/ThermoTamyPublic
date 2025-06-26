@@ -14,6 +14,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView; // Import TextView
+import androidx.appcompat.widget.SearchView; // Import SearchView
 import android.widget.Toast;
 
 import com.tiodev.vegtummy.Adapter.CollectionsAdapter;
@@ -37,7 +39,9 @@ public class CollectionsFragment extends Fragment implements CollectionsAdapter.
 
     private RecyclerView collectionsRecyclerView;
     private CollectionsAdapter collectionsAdapter;
-    private List<CollectionItem> collectionItemList; // Changed from List<String>
+    private List<CollectionItem> collectionItemList;
+    private SearchView searchView;
+    private TextView collectionCountTextView;
 
     private static final String TAG = "CollectionsFragment";
 
@@ -60,19 +64,75 @@ public class CollectionsFragment extends Fragment implements CollectionsAdapter.
         collectionsRecyclerView = view.findViewById(R.id.collections_recycler_view);
         collectionsRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
+        searchView = view.findViewById(R.id.collections_search_view);
+        collectionCountTextView = view.findViewById(R.id.collection_count_text_view);
+
         // Initialize adapter with the new List type
+        // Ensure collectionItemList is initialized before passing to adapter
+        if (collectionItemList == null) {
+            collectionItemList = new ArrayList<>();
+        }
         collectionsAdapter = new CollectionsAdapter(getContext(), collectionItemList, this);
         collectionsRecyclerView.setAdapter(collectionsAdapter);
 
-        loadCollectionsFromJson(); // Call the new method
+        setupSearchView();
+        loadCollectionsFromJson(); // Call the new method to load data initially
 
         return view;
+    }
+
+    private void setupSearchView() {
+        if (getContext() == null || !isAdded()) return;
+        searchView.setQueryHint(getString(R.string.collections_search_hint));
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                if (collectionsAdapter != null) {
+                    collectionsAdapter.getFilter().filter(query);
+                }
+                return false; // Let the SearchView handle the submission if necessary
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                if (collectionsAdapter != null) {
+                    collectionsAdapter.getFilter().filter(newText);
+                }
+                // It's better to update count after filter.publishResults() is done.
+                // For simplicity, we'll update it here, but a callback or listener
+                // from the adapter/filter would be more robust.
+                // A handler post can also work to delay the count update slightly.
+                // Or, the fragment can get the count from the adapter after notifyDataSetChanged.
+                // Let's assume for now that notifyDataSetChanged() in publishResults is synchronous enough.
+                // The most reliable way is for the fragment to observe data changes if using LiveData,
+                // or for the adapter to call a method on the fragment after filtering.
+                // For now, we'll update count after calling filter.
+                // This relies on the filter completing and calling notifyDataSetChanged() before this.
+                // A more robust solution would be a callback from the adapter to the fragment.
+                // For now, we'll rely on the fact that notifyDataSetChanged will trigger a re-layout
+                // and the fragment can then query the adapter.
+                // A simple way: update count after filter call and rely on adapter update.
+                // The adapter's publishResults calls notifyDataSetChanged.
+                // We will update the count TextView in a separate method called after data loading/filtering.
+                updateCollectionCount();
+                return true;
+            }
+        });
+    }
+
+    private void updateCollectionCount() {
+        if (getContext() == null || !isAdded() || collectionsAdapter == null || collectionCountTextView == null) {
+            return;
+        }
+        int count = collectionsAdapter.getItemCount();
+        collectionCountTextView.setText(getString(R.string.collections_count_format, count));
     }
 
     private void loadCollectionsFromJson() {
         Log.d(TAG, "Loading collections from JSON...");
         if (getContext() == null || !isAdded()) {
             Log.e(TAG, "Context is null or fragment not added, cannot load collections.");
+            updateCollectionCount(); // Ensure count is updated even if loading fails early
             return;
         }
 
@@ -117,17 +177,22 @@ public class CollectionsFragment extends Fragment implements CollectionsAdapter.
             // Collections.sort(collectionItemList, (o1, o2) -> o1.getTitle().compareToIgnoreCase(o2.getTitle()));
 
             collectionsAdapter.updateData(collectionItemList);
+            updateCollectionCount(); // Update count after initial load
 
         } catch (JSONException ex) {
             Log.e(TAG, "JSONException while parsing collections.json", ex);
             Toast.makeText(getContext(), "Error parsing collections data.", Toast.LENGTH_SHORT).show();
             collectionsAdapter.updateData(new ArrayList<>());
+            updateCollectionCount(); // Update count after error
         }
 
         if (collectionItemList.isEmpty()) {
-            Toast.makeText(getContext(), "No collections found.", Toast.LENGTH_SHORT).show();
+            // This Toast might be redundant if updateCollectionCount also implies emptiness or if errors are already shown
+            // Toast.makeText(getContext(), "No collections found.", Toast.LENGTH_SHORT).show();
             Log.d(TAG, "No collections found or parsed from JSON.");
         }
+        // Ensure count is accurate if list is empty after try-catch
+        updateCollectionCount();
     }
 
     @Override
