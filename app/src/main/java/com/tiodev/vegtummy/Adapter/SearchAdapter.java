@@ -2,8 +2,7 @@ package com.tiodev.vegtummy.Adapter;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.content.Intent;
-import android.os.Environment;
+// Intent and File are no longer needed here for launching WebviewRecipeActivity directly
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,28 +15,32 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.tiodev.vegtummy.R;
-import com.tiodev.vegtummy.RecipeActivity;
+// RecipeActivity and WebviewRecipeActivity are no longer directly launched from here
 import com.tiodev.vegtummy.RoomDB.User;
-import com.tiodev.vegtummy.WebviewRecipeActivity;
 
-import java.io.File;
 import java.util.List;
 
-public class SearchAdapter extends  RecyclerView.Adapter<SearchAdapter.Searchviewholder>{
+public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.Searchviewholder> {
 
     List<User> data;
-    Context context;
+    Context context; // Retain context for Glide
+    private final OnRecipeClickListener clickListener;
 
+    // Interface for click events
+    public interface OnRecipeClickListener {
+        void onRecipeClicked(User recipe);
+    }
 
-    public SearchAdapter(List<User> data, Context context) {
+    public SearchAdapter(List<User> data, Context context, OnRecipeClickListener listener) {
         this.data = data;
         this.context = context;
+        this.clickListener = listener;
     }
 
     @NonNull
     @Override
     public Searchviewholder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.search_list,parent,false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.search_list, parent, false);
         return new Searchviewholder(view);
     }
 
@@ -45,24 +48,18 @@ public class SearchAdapter extends  RecyclerView.Adapter<SearchAdapter.Searchvie
     public void onBindViewHolder(@NonNull Searchviewholder holder, int position) {
         final User temp = data.get(position);
 
-        File c = new File("/data/" +data.get(position).getIdentifier() +".jpg");
-        File html = new File("data/" +data.get(position).getIdentifier() +".html");
+        // Load image using Glide
+        Glide.with(holder.img.getContext())
+                .load("file:///android_asset/data/" + temp.getIdentifier() + ".jpg")
+                .into(holder.img);
+        holder.txt.setText(temp.getTitle());
 
-        Glide.with(holder.img.getContext()).load("file:///android_asset/data/" +data.get(position).getIdentifier() +".jpg").into(holder.img);
-        holder.txt.setText(data.get(position).getTitle());
-        holder.item.setOnClickListener(v ->{
-            Intent intent = new Intent(context, WebviewRecipeActivity.class);
-            intent.putExtra("id", String.valueOf(temp.getUid())); // Pass the recipe UID as "id"
-            intent.putExtra("tittle", temp.getTitle());
-            intent.putExtra("path", html.getPath());
-            // intent.putExtra("img", temp.getIdentifier()); // Potentially pass image identifier if needed by WebviewRecipeActivity
-            // intent.putExtra("des", temp.getRecipeYieldText()); // Placeholder if needed
-            // intent.putExtra("ing", temp.getKeywords()); // Placeholder if needed
-            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            context.startActivity(intent);
+        // Set click listener on the item view
+        holder.item.setOnClickListener(v -> {
+            if (clickListener != null) {
+                clickListener.onRecipeClicked(temp);
+            }
         });
-
-
     }
 
     @Override
@@ -71,12 +68,12 @@ public class SearchAdapter extends  RecyclerView.Adapter<SearchAdapter.Searchvie
     }
 
     @SuppressLint("NotifyDataSetChanged")
-    public void filterList(List<User> filterList){
+    public void filterList(List<User> filterList) {
         data = filterList;
         notifyDataSetChanged();
     }
 
-    static class Searchviewholder extends RecyclerView.ViewHolder{
+    static class Searchviewholder extends RecyclerView.ViewHolder {
         ImageView img;
         TextView txt;
         ConstraintLayout item;
@@ -88,6 +85,4 @@ public class SearchAdapter extends  RecyclerView.Adapter<SearchAdapter.Searchvie
             item = itemView.findViewById(R.id.search_item);
         }
     }
-
-
 }

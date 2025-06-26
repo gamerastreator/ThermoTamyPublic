@@ -33,4 +33,9 @@
     <!-- Navigation Titles for existing items - Spanish -->
     <string name="navigation_home_title">Inicio</string>
     <string name="navigation_favorites_title">Favoritos</string>
+
+    <!-- WebviewRecipeFragment Content Descriptions - Spanish -->
+    <string name="back_button_desc">Botón Atrás</string>
+    <string name="favorite_button_desc">Botón Favorito</string>
+    <string name="share_button_desc">Botón Compartir Receta</string>
 </resources>

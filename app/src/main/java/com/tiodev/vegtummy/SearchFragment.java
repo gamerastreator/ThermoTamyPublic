@@ -32,7 +32,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-public class SearchFragment extends Fragment {
+// Implement the click listener interface
+public class SearchFragment extends Fragment implements SearchAdapter.OnRecipeClickListener {
 
     // Copied from SearchActivity
     EditText search;
@@ -124,7 +125,8 @@ public class SearchFragment extends Fragment {
         rcview.setLayoutManager(new LinearLayoutManager(getContext()));
         // dataPopular is used by adapter; it will be populated by the filter method.
         // Initialize with empty list for now.
-        adapter = new SearchAdapter(dataPopular, requireContext().getApplicationContext());
+        // Pass 'this' as the OnRecipeClickListener
+        adapter = new SearchAdapter(dataPopular, requireContext().getApplicationContext(), this);
         rcview.setAdapter(adapter);
 
         // Initial filter call if initialCollectionName is set or to show all/default
@@ -266,5 +268,34 @@ public class SearchFragment extends Fragment {
             resultText += " de la colección " + currentCollectionName;
         }
         results.setText(resultText);
+    }
+
+    @Override
+    public void onRecipeClicked(User recipe) {
+        if (getActivity() == null || !isAdded() || recipe == null) {
+            return;
+        }
+
+        // Construct the htmlPath for WebviewRecipeFragment
+        // This assumes recipe.getIdentifier() gives the base name for the .html file
+        String htmlPath = "data/" + recipe.getIdentifier() + ".html";
+        String recipeIdStr = String.valueOf(recipe.getUid());
+
+        WebviewRecipeFragment webviewFragment = WebviewRecipeFragment.newInstance(
+                recipeIdStr,
+                htmlPath,
+                recipe.getTitle()
+        );
+
+        getParentFragmentManager().beginTransaction()
+                .replace(R.id.fragment_container, webviewFragment) // Assumes R.id.fragment_container is in HomeActivity
+                .addToBackStack(null) // Allows user to navigate back to search results
+                .commit();
+
+        // Optional: Hide keyboard if it was open
+        InputMethodManager imm = (InputMethodManager) requireActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+        if (imm != null && getView() != null) {
+            imm.hideSoftInputFromWindow(getView().getWindowToken(), 0);
+        }
     }
 }

@@ -38,4 +38,9 @@
     <!-- Navigation Titles for existing items -->
     <string name="navigation_home_title">Home</string>
     <string name="navigation_favorites_title">Favorites</string>
+
+    <!-- WebviewRecipeFragment Content Descriptions -->
+    <string name="back_button_desc">Back Button</string>
+    <string name="favorite_button_desc">Favorite Button</string>
+    <string name="share_button_desc">Share Recipe Button</string>
 </resources>
