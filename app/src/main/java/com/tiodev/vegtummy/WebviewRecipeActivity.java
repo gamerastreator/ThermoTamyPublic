@@ -131,7 +131,7 @@ public class WebviewRecipeActivity extends AppCompatActivity {
                     var collectionname = url.split("/")[url.split("/").length-1];
                     String result = loadJSONFromAsset(collectionname); // Ensure loadJSONFromAsset is accessible
                     if (!result.isEmpty()) {
-                        Intent intent = new Intent(WebviewRecipeActivity.this, SearchActivity.class);
+                        Intent intent = new Intent(WebviewRecipeActivity.this, SearchFragment.class);
                         intent.putExtra("collection", result);
                         view.getContext().startActivity(intent);
                         finish();

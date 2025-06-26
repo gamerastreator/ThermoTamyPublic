@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Favorites Fragment Strings - Spanish -->
+    <string name="favorites_title">Tus Listas de Favoritos</string>
+    <string name="empty_favorites_default_text">¡Aún no hay listas de favoritos! Toca \'+\' para crear una.</string>
+    <string name="fab_create_list_content_description">Crear Nueva Lista de Favoritos</string>
+    <string name="hint_list_name">Nombre de la Lista</string>
+    <string name="button_create">Crear</string>
+    <string name="toast_list_created">Lista \'%1$s\' creada.</string>
+    <string name="toast_failed_create_list">Error al crear la lista.</string>
+    <string name="toast_list_name_empty">El nombre de la lista no puede estar vacío.</string>
+    <string name="button_cancel">Cancelar</string>
+    <string name="toast_error_opening_list">Error al abrir la lista.</string>
+    <string name="context_menu_title_manage_list">Gestionar Lista: %1$s</string>
+    <string name="dialog_title_rename_list">Renombrar Lista</string>
+    <string name="button_rename">Renombrar</string>
+    <string name="toast_list_renamed">Lista renombrada a \'%1$s\'.</string>
+    <string name="toast_failed_rename_list">Error al renombrar la lista.</string>
+    <string name="dialog_title_delete_list">Eliminar Lista</string>
+    <string name="dialog_message_delete_list_confirm">¿Seguro que quieres eliminar la lista \'%1$s\'? Esta acción no se puede deshacer.</string>
+    <string name="button_delete">Eliminar</string>
+    <string name="toast_list_deleted">Lista \'%1$s\' eliminada.</string>
+    <string name="toast_failed_delete_list">Error al eliminar la lista.</string>
+    <!-- menu_rename_list and menu_delete_list will use the Spanish versions from dialog_title_rename_list and dialog_title_delete_list automatically -->
+
+    <!-- Collections Fragment Search and Count - Spanish -->
+    <string name="collections_search_hint">Buscar colecciones…</string>
+    <string name="collections_count_format">Total Colecciones: %d</string>
+
+    <!-- Navigation Search Title - Spanish -->
+    <string name="navigation_search_title">Buscar</string>
+
+    <!-- Navigation Titles for existing items - Spanish -->
+    <string name="navigation_home_title">Inicio</string>
+    <string name="navigation_favorites_title">Favoritos</string>
+
+    <!-- WebviewRecipeFragment Content Descriptions - Spanish -->
+    <string name="back_button_desc">Botón Atrás</string>
+    <string name="favorite_button_desc">Botón Favorito</string>
+    <string name="share_button_desc">Botón Compartir Receta</string>
+</resources>

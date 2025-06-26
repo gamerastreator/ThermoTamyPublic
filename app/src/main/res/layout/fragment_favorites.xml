@@ -11,7 +11,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
-        android:text="Your Favorite Lists"
+        android:text="@string/favorites_title"
         android:textSize="24sp"
         android:textStyle="bold"
         app:layout_constraintTop_toTopOf="parent"
@@ -33,7 +33,7 @@
         android:id="@+id/empty_favorites_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="No favorite lists yet! Tap '+' to create one."
+        android:text="@string/empty_favorites_default_text"
         android:textSize="18sp"
         android:visibility="gone"
         android:gravity="center"
@@ -50,7 +50,7 @@
         android:src="@drawable/ic_add"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:contentDescription="Create New Favorite List"
+        android:contentDescription="@string/fab_create_list_content_description"
         app:tint="@android:color/white" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

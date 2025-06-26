@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     app:layoutDescription="@xml/activity_search_scene"
-    tools:context=".SearchActivity">
+    tools:context=".SearchFragment"> {/* Changed context */}
 
     <EditText
         android:id="@+id/search"
@@ -211,7 +211,8 @@
         android:padding="5dp"
         android:src="?attr/actionModeCloseDrawable"
         app:layout_constraintStart_toStartOf="@+id/search"
-        app:layout_constraintTop_toTopOf="@+id/search" />
+        app:layout_constraintTop_toTopOf="@+id/search"
+        android:contentDescription="Back button" /> {/* Added content description */}
 
     <com.google.android.material.chip.ChipGroup
         android:id="@+id/tiempoTotal"
@@ -324,7 +325,8 @@
         android:text="Mostrando resultados."
         android:textAppearance="@style/TextAppearance.AppCompat.Large"
         app:layout_constraintTop_toBottomOf="@id/tiempoTotal"
-        tools:layout_editor_absoluteX="48dp" />
+        tools:layout_editor_absoluteX="48dp"
+        tools:ignore="MissingConstraints" /> {/* Added tools:ignore */}
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rcview"

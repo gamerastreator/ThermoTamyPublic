@@ -3,9 +3,17 @@
     <item
         android:id="@+id/navigation_home"
         android:icon="@drawable/ic_home"
-        android:title="Home" />
+        android:title="@string/navigation_home_title" />
+    <item
+        android:id="@+id/navigation_launch_search"
+        android:icon="@drawable/search_ic"
+        android:title="@string/navigation_search_title" />
+    <item
+        android:id="@+id/navigation_collections"
+        android:icon="@drawable/ic_view_list_24dp"
+        android:title="@string/navigation_collections_title" />
     <item
         android:id="@+id/navigation_favorites"
         android:icon="@drawable/ic_favorite"
-        android:title="Favorites" />
+        android:title="@string/navigation_favorites_title" />
 </menu>

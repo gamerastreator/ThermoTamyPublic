@@ -56,8 +56,44 @@ public class HomeActivity extends AppCompatActivity {
 
         // Load the default fragment (HomeFragment)
         if (savedInstanceState == null) { // Important to avoid recreating fragment on config change
-            loadFragment(new HomeFragment(), false); // Load HomeFragment by default
+            // Check if launched by deep link first
+            if (!handleDeepLink(getIntent())) {
+                // If not a deep link, load default fragment
+                loadFragment(new HomeFragment(), false);
+            }
         }
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        setIntent(intent); // Update the activity's intent
+        handleDeepLink(intent); // Handle potential deep link
+    }
+
+    private boolean handleDeepLink(Intent intent) {
+        if (intent == null) return false;
+
+        String action = intent.getAction();
+        Uri data = intent.getData();
+
+        if (Intent.ACTION_VIEW.equals(action) && data != null) {
+            if ("vegtummy".equals(data.getScheme()) && "recipe".equals(data.getHost())) {
+                String recipeId = data.getQueryParameter("id");
+                if (recipeId != null && !recipeId.isEmpty()) {
+                    WebviewRecipeFragment fragment = WebviewRecipeFragment.newInstanceForDeepLink(recipeId);
+                    // Replace whatever is in the container, add to backstack
+                    getSupportFragmentManager().beginTransaction()
+                            .replace(R.id.fragment_container, fragment)
+                            .addToBackStack(null) // So user can navigate back from deep linked recipe
+                            .commit();
+                    // Optionally, set a default tab like Home if app was launched fresh via deep link
+                    // bottomNavigationView.setSelectedItemId(R.id.navigation_home);
+                    return true; // Deep link handled
+                }
+            }
+        }
+        return false; // Not a deep link we handle here
     }
 
     private BottomNavigationView.OnNavigationItemSelectedListener navListener =
@@ -69,12 +105,18 @@ public class HomeActivity extends AppCompatActivity {
                     selectedFragment = new HomeFragment();
                 } else if (itemId == R.id.navigation_favorites) {
                     selectedFragment = new FavoritesFragment();
+                } else if (itemId == R.id.navigation_collections) {
+                    selectedFragment = new CollectionsFragment();
+                } else if (itemId == R.id.navigation_launch_search) {
+                    // Now Search is a Fragment
+                    selectedFragment = SearchFragment.newInstance(null); // No pre-filter from bottom nav
                 }
 
                 if (selectedFragment != null) {
                     loadFragment(selectedFragment, true); // Replace existing fragment
+                    return true; // Successfully handled and loaded a fragment
                 }
-                return true;
+                return false; // Should not happen if IDs are correct, but as a fallback
             };
 
     private void loadFragment(Fragment fragment, boolean replace) {
