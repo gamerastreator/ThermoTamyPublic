@@ -31,4 +31,11 @@
     <!-- Collections Fragment Search and Count -->
     <string name="collections_search_hint">Search collections…</string>
     <string name="collections_count_format">Total Collections: %d</string>
+
+    <!-- Navigation Search Title -->
+    <string name="navigation_search_title">Search</string>
+
+    <!-- Navigation Titles for existing items -->
+    <string name="navigation_home_title">Home</string>
+    <string name="navigation_favorites_title">Favorites</string>
 </resources>

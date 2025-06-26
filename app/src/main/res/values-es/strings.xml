@@ -26,4 +26,11 @@
     <!-- Collections Fragment Search and Count - Spanish -->
     <string name="collections_search_hint">Buscar colecciones…</string>
     <string name="collections_count_format">Total Colecciones: %d</string>
+
+    <!-- Navigation Search Title - Spanish -->
+    <string name="navigation_search_title">Buscar</string>
+
+    <!-- Navigation Titles for existing items - Spanish -->
+    <string name="navigation_home_title">Inicio</string>
+    <string name="navigation_favorites_title">Favoritos</string>
 </resources>

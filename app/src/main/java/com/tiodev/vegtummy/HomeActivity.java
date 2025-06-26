@@ -71,12 +71,17 @@ public class HomeActivity extends AppCompatActivity {
                     selectedFragment = new FavoritesFragment();
                 } else if (itemId == R.id.navigation_collections) {
                     selectedFragment = new CollectionsFragment();
+                } else if (itemId == R.id.navigation_launch_search) {
+                    Intent intent = new Intent(HomeActivity.this, SearchActivity.class);
+                    startActivity(intent);
+                    return false; // Do not select the 'Search' item as current tab
                 }
 
                 if (selectedFragment != null) {
                     loadFragment(selectedFragment, true); // Replace existing fragment
+                    return true; // Successfully handled and loaded a fragment
                 }
-                return true;
+                return false; // Should not happen if IDs are correct, but as a fallback
             };
 
     private void loadFragment(Fragment fragment, boolean replace) {
