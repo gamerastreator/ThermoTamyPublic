@@ -28,7 +28,9 @@ import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collections; // Keep for sorting if needed
+import java.util.LinkedHashMap; // Import LinkedHashMap
 import java.util.List;
+import java.util.Map; // Import Map
 
 
 public class CollectionsFragment extends Fragment implements CollectionsAdapter.OnCollectionClickListener {
@@ -92,7 +94,8 @@ public class CollectionsFragment extends Fragment implements CollectionsAdapter.
 
         try {
             JSONArray jsonArray = new JSONArray(jsonString);
-            collectionItemList.clear(); // Clear previous items
+            // Use LinkedHashMap to store items by title, ensuring uniqueness and preserving order
+            Map<String, CollectionItem> uniqueCollectionItemsMap = new LinkedHashMap<>();
 
             for (int i = 0; i < jsonArray.length(); i++) {
                 JSONObject jsonObject = jsonArray.getJSONObject(i);
@@ -101,12 +104,16 @@ public class CollectionsFragment extends Fragment implements CollectionsAdapter.
                 String image = jsonObject.optString("image"); // Assuming there's an image field
 
                 if (!title.isEmpty()) { // Add only if title is present
-                    collectionItemList.add(new CollectionItem(id, title, image));
+                    // If title is not already in map, put the new item. This keeps the first occurrence.
+                    uniqueCollectionItemsMap.putIfAbsent(title, new CollectionItem(id, title, image));
                 }
             }
 
-            Log.d(TAG, "Collections loaded from JSON: " + collectionItemList.size());
-            // Optional: Sort by title
+            collectionItemList.clear(); // Clear previous items
+            collectionItemList.addAll(uniqueCollectionItemsMap.values()); // Add unique items from map
+
+            Log.d(TAG, "Unique collections loaded from JSON: " + collectionItemList.size());
+            // Optional: Sort by title if needed (already first-occurrence order is maintained by LinkedHashMap)
             // Collections.sort(collectionItemList, (o1, o2) -> o1.getTitle().compareToIgnoreCase(o2.getTitle()));
 
             collectionsAdapter.updateData(collectionItemList);
