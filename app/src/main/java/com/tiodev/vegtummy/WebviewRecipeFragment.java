@@ -22,6 +22,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 import androidx.room.Room;
 
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.tiodev.vegtummy.RoomDB.AppDatabase;
 import com.tiodev.vegtummy.RoomDB.User;
 import com.tiodev.vegtummy.RoomDB.UserDao;
@@ -94,7 +95,7 @@ public class WebviewRecipeFragment extends Fragment {
         userDao = db.userDao();
 
         if (getArguments() != null) {
-            boolean isDeepLink = getArguments().getBoolean(ARG_IS_DEE_LINK, false);
+            boolean isDeepLink = getArguments().getBoolean(ARG_IS_DEEP_LINK, false);
             this.recipeId = getArguments().getString(ARG_RECIPE_ID);
 
             if (isDeepLink) {
@@ -204,15 +205,20 @@ public class WebviewRecipeFragment extends Fragment {
                                 .commit();
 
                         // Update BottomNavigationView in HomeActivity to select "Search"
-                        if (getActivity() instanceof HomeActivity) {
+                       /* if (getActivity() instanceof HomeActivity) {
                             BottomNavigationView bottomNav = getActivity().findViewById(R.id.bottom_navigation);
                             if (bottomNav != null) {
                                 bottomNav.setSelectedItemId(R.id.navigation_launch_search);
                             }
-                        }
+                        }*/
                         return true;
                     }
                     return true; // Stay in current webview if collection title not found
+                } else if(url.contains("file:///")) { // Could be internal navigation within assets
+                    var id = url.split("/")[url.split("/").length-1];
+                    // This logic might need refinement if it's not just simple HTML files by ID
+                    webview.loadUrl("file:///android_asset/data/" + id + ".html");
+                    return true; // We've handled it.
                 } else if (url.startsWith("file:///android_asset/")) {
                     // Allow loading of other local HTML files directly if path is correct
                     // For simplicity, this example only reloads if it's a specific pattern,

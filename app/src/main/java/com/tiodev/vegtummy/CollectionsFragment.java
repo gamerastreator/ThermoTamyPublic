@@ -222,12 +222,12 @@ public class CollectionsFragment extends Fragment implements CollectionsAdapter.
                 .commit();
 
         // Update BottomNavigationView to select the "Search" tab
-        if (getActivity() instanceof HomeActivity) {
+       /* if (getActivity() instanceof HomeActivity) {
             HomeActivity homeActivity = (HomeActivity) getActivity();
             BottomNavigationView bottomNavView = homeActivity.findViewById(R.id.bottom_navigation);
             if (bottomNavView != null) {
                 bottomNavView.setSelectedItemId(R.id.navigation_launch_search);
             }
-        }
+        }*/
     }
 }

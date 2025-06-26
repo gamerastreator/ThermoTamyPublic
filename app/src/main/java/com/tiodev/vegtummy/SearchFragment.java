@@ -180,27 +180,75 @@ public class SearchFragment extends Fragment implements SearchAdapter.OnRecipeCl
             }
         });
 
-        // ChipGroup Listeners
-        setupChipGroupListener(dificultad, dificultyFilter);
-        setupChipGroupListener(tiempoPreparacion, tiempoPreparacionFilter);
-        setupChipGroupListener(porciones, porcionesFilter);
-        setupChipGroupListener(version, versionFilter);
-        setupChipGroupListener(tiempoTotal, tiempoTotalFilter);
-        setupChipGroupListener(rating, ratingFilter);
-    }
 
-    private void setupChipGroupListener(ChipGroup chipGroup, List<String> filterList) {
-        chipGroup.setOnCheckedStateChangeListener((group, checkedIds) -> {
-            filterList.clear();
-            for (int id : checkedIds) {
-                Chip chip = group.findViewById(id);
-                if (chip != null) {
-                    filterList.add(chip.getText().toString());
+        dificultad.setOnCheckedChangeListener(new ChipGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(ChipGroup group, int checkedId) {
+                dificultyFilter = new ArrayList<>();
+                for( int i = 0; i< group.getCheckedChipIds().size(); i++) {
+                    dificultyFilter.add("" + ((Chip) group.findViewById(group.getCheckedChipIds().get(i))).getText());
                 }
+                filter();
+
             }
-            filter();
+        });
+        tiempoPreparacion.setOnCheckedChangeListener(new ChipGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(ChipGroup group, int checkedId) {
+                tiempoPreparacionFilter = new ArrayList<>();
+                for( int i = 0; i< group.getCheckedChipIds().size(); i++) {
+                    tiempoPreparacionFilter.add("" + ((Chip) group.findViewById(group.getCheckedChipIds().get(i))).getText());
+                }
+                filter();
+
+            }
+        });
+        tiempoTotal.setOnCheckedChangeListener(new ChipGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(ChipGroup group, int checkedId) {
+                tiempoTotalFilter = new ArrayList<>();
+                for( int i = 0; i< group.getCheckedChipIds().size(); i++) {
+                    tiempoTotalFilter.add("" + ((Chip) group.findViewById(group.getCheckedChipIds().get(i))).getText());
+                }
+                filter();
+
+            }
+        });
+        porciones.setOnCheckedChangeListener(new ChipGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(ChipGroup group, int checkedId) {
+                porcionesFilter = new ArrayList<>();
+                for( int i = 0; i< group.getCheckedChipIds().size(); i++) {
+                    porcionesFilter.add("" + ((Chip) group.findViewById(group.getCheckedChipIds().get(i))).getText());
+                }
+                filter();
+
+            }
+        });
+        version.setOnCheckedChangeListener(new ChipGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(ChipGroup group, int checkedId) {
+                versionFilter = new ArrayList<>();
+                for( int i = 0; i< group.getCheckedChipIds().size(); i++) {
+                    versionFilter.add("" + ((Chip) group.findViewById(group.getCheckedChipIds().get(i))).getText());
+                }
+                filter();
+
+            }
+        });
+        rating.setOnCheckedChangeListener(new ChipGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(ChipGroup group, int checkedId) {
+                ratingFilter = new ArrayList<>();
+                for( int i = 0; i< group.getCheckedChipIds().size(); i++) {
+                    ratingFilter.add("" + ((Chip) group.findViewById(group.getCheckedChipIds().get(i))).getText());
+                }
+                filter();
+
+            }
         });
     }
+
 
     // Filter method (copied and adapted from SearchActivity)
     // Needs access to 'recipes' list (all recipes) and 'initialCollectionName'

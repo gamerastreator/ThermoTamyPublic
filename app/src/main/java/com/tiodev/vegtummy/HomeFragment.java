@@ -76,7 +76,7 @@ public class HomeFragment extends Fragment {
         if (dessert != null) dessert.setOnClickListener(v -> startMainActivity("Desserts", "Dessert"));
 
         if (editText != null) editText.setOnClickListener(v ->{
-            Intent intent = new Intent(getActivity(), SearchActivity.class);
+            Intent intent = new Intent(getActivity(), SearchFragment.class);
             startActivity(intent);
         });
     }
