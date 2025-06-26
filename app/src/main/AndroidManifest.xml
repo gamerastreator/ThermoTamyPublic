@@ -24,9 +24,6 @@
         </intent-filter>
         </activity>
         <activity
-            android:name="com.tiodev.vegtummy.SearchActivity"
-            android:exported="false" />
-        <activity
             android:name="com.tiodev.vegtummy.HomeActivity"
             android:exported="true">
 

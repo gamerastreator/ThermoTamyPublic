@@ -72,9 +72,8 @@ public class HomeActivity extends AppCompatActivity {
                 } else if (itemId == R.id.navigation_collections) {
                     selectedFragment = new CollectionsFragment();
                 } else if (itemId == R.id.navigation_launch_search) {
-                    Intent intent = new Intent(HomeActivity.this, SearchActivity.class);
-                    startActivity(intent);
-                    return false; // Do not select the 'Search' item as current tab
+                    // Now Search is a Fragment
+                    selectedFragment = SearchFragment.newInstance(null); // No pre-filter from bottom nav
                 }
 
                 if (selectedFragment != null) {

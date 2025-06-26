@@ -19,7 +19,9 @@ import androidx.appcompat.widget.SearchView; // Import SearchView
 import android.widget.Toast;
 
 import com.tiodev.vegtummy.Adapter.CollectionsAdapter;
-import com.tiodev.vegtummy.Model.CollectionItem; // Import CollectionItem
+import com.tiodev.vegtummy.Model.CollectionItem;
+
+import com.google.android.material.bottomnavigation.BottomNavigationView; // Added for BNV interaction
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -209,12 +211,23 @@ public class CollectionsFragment extends Fragment implements CollectionsAdapter.
             return;
         }
         Log.d(TAG, "Collection clicked: " + collectionItem.getTitle() + " (ID: " + collectionItem.getId() + ")");
-        Intent intent = new Intent(getContext(), SearchActivity.class);
 
-        // Pass the collection title to SearchActivity.
-        // This assumes SearchActivity uses the collection title for filtering.
-        intent.putExtra("collection", collectionItem.getTitle());
+        // Create SearchFragment instance with the collection title as an argument
+        SearchFragment searchFragment = SearchFragment.newInstance(collectionItem.getTitle());
 
-        startActivity(intent);
+        // Replace current fragment with SearchFragment
+        getParentFragmentManager().beginTransaction()
+                .replace(R.id.fragment_container, searchFragment)
+                .addToBackStack(null) // Add to back stack so user can navigate back
+                .commit();
+
+        // Update BottomNavigationView to select the "Search" tab
+        if (getActivity() instanceof HomeActivity) {
+            HomeActivity homeActivity = (HomeActivity) getActivity();
+            BottomNavigationView bottomNavView = homeActivity.findViewById(R.id.bottom_navigation);
+            if (bottomNavView != null) {
+                bottomNavView.setSelectedItemId(R.id.navigation_launch_search);
+            }
+        }
     }
 }
