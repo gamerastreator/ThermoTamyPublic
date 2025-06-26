@@ -7,9 +7,9 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import androidx.room.Room;
+// Removed Room imports related to User/UserDao for this specific collection loading
 
-import android.text.TextUtils;
+import android.content.res.AssetManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,24 +17,25 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.tiodev.vegtummy.Adapter.CollectionsAdapter;
-import com.tiodev.vegtummy.RoomDB.AppDatabase;
-import com.tiodev.vegtummy.RoomDB.User;
-import com.tiodev.vegtummy.RoomDB.UserDao;
+import com.tiodev.vegtummy.Model.CollectionItem; // Import CollectionItem
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashSet;
+import java.util.Collections; // Keep for sorting if needed
 import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
+
 
 public class CollectionsFragment extends Fragment implements CollectionsAdapter.OnCollectionClickListener {
 
     private RecyclerView collectionsRecyclerView;
     private CollectionsAdapter collectionsAdapter;
-    private List<String> collectionNamesList;
-    private UserDao userDao;
+    private List<CollectionItem> collectionItemList; // Changed from List<String>
 
     private static final String TAG = "CollectionsFragment";
 
@@ -45,14 +46,8 @@ public class CollectionsFragment extends Fragment implements CollectionsAdapter.
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        AppDatabase db = Room.databaseBuilder(requireContext().getApplicationContext(),
-                        AppDatabase.class, "db_name")
-                .allowMainThreadQueries() // For simplicity in this example; consider background thread for DB operations
-                .createFromAsset("database/recipe.db")
-                .fallbackToDestructiveMigration()
-                .build();
-        userDao = db.userDao();
-        collectionNamesList = new ArrayList<>();
+        // Removed UserDao initialization
+        collectionItemList = new ArrayList<>();
     }
 
     @Nullable
@@ -63,76 +58,91 @@ public class CollectionsFragment extends Fragment implements CollectionsAdapter.
         collectionsRecyclerView = view.findViewById(R.id.collections_recycler_view);
         collectionsRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
-        collectionsAdapter = new CollectionsAdapter(getContext(), collectionNamesList, this);
+        // Initialize adapter with the new List type
+        collectionsAdapter = new CollectionsAdapter(getContext(), collectionItemList, this);
         collectionsRecyclerView.setAdapter(collectionsAdapter);
 
-        loadCollections();
+        loadCollectionsFromJson(); // Call the new method
 
         return view;
     }
 
-    private void loadCollections() {
-        Log.d(TAG, "Loading collections from database...");
-        List<User> allRecipes = userDao.getAll();
-        if (allRecipes == null || allRecipes.isEmpty()) {
-            Log.d(TAG, "No recipes found in the database.");
-            if (isAdded() && getContext() != null) { // Check if fragment is added and context is available
-                 Toast.makeText(getContext(), "No recipes found to derive collections.", Toast.LENGTH_SHORT).show();
-            }
+    private void loadCollectionsFromJson() {
+        Log.d(TAG, "Loading collections from JSON...");
+        if (getContext() == null || !isAdded()) {
+            Log.e(TAG, "Context is null or fragment not added, cannot load collections.");
+            return;
+        }
+
+        AssetManager assetManager = getContext().getAssets();
+        String jsonString;
+        try {
+            InputStream is = assetManager.open("data/static/collections.json");
+            int size = is.available();
+            byte[] buffer = new byte[size];
+            is.read(buffer);
+            is.close();
+            jsonString = new String(buffer, StandardCharsets.UTF_8);
+        } catch (IOException ex) {
+            Log.e(TAG, "IOException while loading collections.json", ex);
+            Toast.makeText(getContext(), "Error loading collections data.", Toast.LENGTH_SHORT).show();
             collectionsAdapter.updateData(new ArrayList<>()); // Update with empty list
             return;
         }
 
-        Log.d(TAG, "Total recipes fetched: " + allRecipes.size());
-        Set<String> uniqueCollectionNames = new HashSet<>();
-        for (User recipe : allRecipes) {
-            String collectionsStr = recipe.getCollections();
-            if (!TextUtils.isEmpty(collectionsStr)) {
-                // Assuming collections are comma-separated, possibly with spaces
-                String[] names = collectionsStr.split("\\s*,\\s*"); // Split by comma, trimming whitespace
-                for (String name : names) {
-                    if (!TextUtils.isEmpty(name)) {
-                        uniqueCollectionNames.add(name.trim());
-                    }
+        try {
+            JSONArray jsonArray = new JSONArray(jsonString);
+            collectionItemList.clear(); // Clear previous items
+
+            for (int i = 0; i < jsonArray.length(); i++) {
+                JSONObject jsonObject = jsonArray.getJSONObject(i);
+                String id = jsonObject.optString("id");
+                String title = jsonObject.optString("title");
+                String image = jsonObject.optString("image"); // Assuming there's an image field
+
+                if (!title.isEmpty()) { // Add only if title is present
+                    collectionItemList.add(new CollectionItem(id, title, image));
                 }
             }
+
+            Log.d(TAG, "Collections loaded from JSON: " + collectionItemList.size());
+            // Optional: Sort by title
+            // Collections.sort(collectionItemList, (o1, o2) -> o1.getTitle().compareToIgnoreCase(o2.getTitle()));
+
+            collectionsAdapter.updateData(collectionItemList);
+
+        } catch (JSONException ex) {
+            Log.e(TAG, "JSONException while parsing collections.json", ex);
+            Toast.makeText(getContext(), "Error parsing collections data.", Toast.LENGTH_SHORT).show();
+            collectionsAdapter.updateData(new ArrayList<>());
         }
 
-        Log.d(TAG, "Unique collections found: " + uniqueCollectionNames.size());
-
-        collectionNamesList.clear();
-        collectionNamesList.addAll(new ArrayList<>(uniqueCollectionNames));
-        Collections.sort(collectionNamesList); // Optional: sort alphabetically
-
-        if (isAdded() && collectionsAdapter != null) { // Check if fragment is added
-             collectionsAdapter.updateData(collectionNamesList);
-        }
-
-        if (collectionNamesList.isEmpty() && isAdded() && getContext() != null) {
+        if (collectionItemList.isEmpty()) {
             Toast.makeText(getContext(), "No collections found.", Toast.LENGTH_SHORT).show();
-             Log.d(TAG, "No collections derived from recipes.");
+            Log.d(TAG, "No collections found or parsed from JSON.");
         }
     }
 
     @Override
-    public void onCollectionClick(String collectionName) {
-        if (getContext() == null || !isAdded()) {
-            Log.e(TAG, "Context is null or fragment not added, cannot start SearchActivity.");
+    public void onResume() {
+        super.onResume();
+        // Refresh data if needed, e.g. if JSON could change or based on other app events
+        // loadCollectionsFromJson(); // Could be called here if dynamic updates are expected
+    }
+
+    @Override
+    public void onCollectionClick(CollectionItem collectionItem) { // Parameter changed to CollectionItem
+        if (getContext() == null || !isAdded() || collectionItem == null) {
+            Log.e(TAG, "Context or collectionItem is null, or fragment not added. Cannot start SearchActivity.");
             return;
         }
-        Log.d(TAG, "Collection clicked: " + collectionName);
+        Log.d(TAG, "Collection clicked: " + collectionItem.getTitle() + " (ID: " + collectionItem.getId() + ")");
         Intent intent = new Intent(getContext(), SearchActivity.class);
-        // SearchActivity expects the "collection" extra to be the title of the collection.
-        // This title is then used to filter recipes.
-        // The WebviewRecipeActivity's loadJSONFromAsset was previously used to get this title
-        // from a collection ID. Here, the collectionName IS the title.
-        intent.putExtra("collection", collectionName);
-        // We also need to tell SearchActivity that it's filtering by a collection name,
-        // not a general search query. SearchActivity's current logic might need adjustment
-        // if it only expects a search query string.
-        // For now, we assume SearchActivity can handle a collection title passed this way.
-        // It might internally search for recipes where the `recipe.getCollections()` string
-        // contains the passed `collectionName`.
+
+        // Pass the collection title to SearchActivity.
+        // This assumes SearchActivity uses the collection title for filtering.
+        intent.putExtra("collection", collectionItem.getTitle());
+
         startActivity(intent);
     }
 }

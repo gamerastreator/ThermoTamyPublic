@@ -8,22 +8,23 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import com.tiodev.vegtummy.R;
+import com.tiodev.vegtummy.Model.CollectionItem; // Import CollectionItem
 import java.util.ArrayList;
 import java.util.List;
 
 public class CollectionsAdapter extends RecyclerView.Adapter<CollectionsAdapter.ViewHolder> {
 
-    private List<String> collectionNames;
+    private List<CollectionItem> collectionItems; // Changed from List<String>
     private final OnCollectionClickListener listener;
     private Context context;
 
     public interface OnCollectionClickListener {
-        void onCollectionClick(String collectionName);
+        void onCollectionClick(CollectionItem collectionItem); // Changed parameter
     }
 
-    public CollectionsAdapter(Context context, List<String> collectionNames, OnCollectionClickListener listener) {
+    public CollectionsAdapter(Context context, List<CollectionItem> collectionItems, OnCollectionClickListener listener) {
         this.context = context;
-        this.collectionNames = collectionNames != null ? collectionNames : new ArrayList<>();
+        this.collectionItems = collectionItems != null ? collectionItems : new ArrayList<>();
         this.listener = listener;
     }
 
@@ -36,24 +37,24 @@ public class CollectionsAdapter extends RecyclerView.Adapter<CollectionsAdapter.
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        String collectionName = collectionNames.get(position);
-        holder.collectionNameTextView.setText(collectionName);
+        CollectionItem collectionItem = collectionItems.get(position); // Get CollectionItem
+        holder.collectionNameTextView.setText(collectionItem.getTitle()); // Display title
         holder.itemView.setOnClickListener(v -> {
             if (listener != null) {
-                listener.onCollectionClick(collectionName);
+                listener.onCollectionClick(collectionItem); // Pass CollectionItem
             }
         });
     }
 
     @Override
     public int getItemCount() {
-        return collectionNames.size();
+        return collectionItems.size(); // Use collectionItems
     }
 
-    public void updateData(List<String> newCollectionNames) {
-        this.collectionNames.clear();
-        if (newCollectionNames != null) {
-            this.collectionNames.addAll(newCollectionNames);
+    public void updateData(List<CollectionItem> newCollectionItems) { // Changed parameter type
+        this.collectionItems.clear();
+        if (newCollectionItems != null) {
+            this.collectionItems.addAll(newCollectionItems);
         }
         notifyDataSetChanged();
     }
