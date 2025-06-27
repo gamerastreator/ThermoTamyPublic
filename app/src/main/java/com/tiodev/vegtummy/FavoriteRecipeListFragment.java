@@ -4,6 +4,7 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.room.Room;
@@ -79,7 +80,9 @@ public class FavoriteRecipeListFragment extends Fragment {
         recipeRecyclerView = view.findViewById(R.id.recipe_list_recycler_view);
         emptyListTextView = view.findViewById(R.id.empty_recipe_list_text);
 
-        recipeRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+       // recipeRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        GridLayoutManager mLayoutManager = new GridLayoutManager(getActivity(),2);
+        recipeRecyclerView.setLayoutManager(mLayoutManager);
         recipeList = new ArrayList<>();
         // FavoritesAdapter is designed to take List<User> and Context
         // and it opens WebviewRecipeActivity, which is what we want here.

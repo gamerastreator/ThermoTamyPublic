@@ -6,120 +6,70 @@
     android:layout_height="match_parent"
     android:fillViewport="true">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        tools:context=".HomeFragment">
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
         <!-- ImageView for home_assest1 (optional, was gone) -->
-        <ImageView
-            android:id="@+id/home_assest_image"
-            android:layout_width="190dp"
-            android:layout_height="190dp"
-            android:visibility="gone"
-            android:layout_marginTop="90dp"
-            android:layout_marginEnd="-10dp"
-            android:src="@drawable/home_assest1"
-            android:rotation="-1"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            android:contentDescription="Decorative Image" />
 
-        <TextView
-            android:id="@+id/textView2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="24dp"
-            android:fontFamily="@font/poppins_semi"
-            android:text="Hola"
-            android:textColor="@color/black"
-            android:textSize="28sp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
 
-        <TextView
-            android:id="@+id/textView3"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:fontFamily="@font/poppins_semi"
-            android:text="cocinilla!"
-            android:textColor="@color/purple_500"
-            android:textSize="28sp"
-            android:textStyle="bold"
-            app:layout_constraintStart_toEndOf="@+id/textView2"
-            app:layout_constraintTop_toTopOf="@+id/textView2" />
+            <TextView
+                android:id="@+id/textView3"
+                android:paddingStart="12dp"
+                android:paddingEnd="12dp"
+                android:paddingBottom="4dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/poppins_semi"
+                android:text="Hola cocinilla!"
+                android:textColor="@color/purple_500"
+                android:textSize="28sp"
+                android:textStyle="bold"
+                tools:layout_editor_absoluteX="92dp"
+                tools:layout_editor_absoluteY="1dp" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <!-- Search Icon and EditText -->
+
 
         <TextView
             android:id="@+id/textView4"
-            android:layout_width="0dp"
+            android:paddingStart="12dp"
+            android:paddingEnd="12dp"
+            android:paddingBottom="4dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:layout_marginEnd="16dp"
             android:fontFamily="@font/poppins_light"
             android:text="¿Qué plato de cookido quieres trampear? Tenemos un total de"
             android:textColor="#424242"
-            android:textSize="17sp"
-            app:layout_constraintStart_toStartOf="@+id/textView2"
-            app:layout_constraintTop_toBottomOf="@+id/textView2"
-            app:layout_constraintEnd_toEndOf="parent"/>
-
-        <!-- Search Icon and EditText -->
-        <ImageView
-            android:id="@+id/search_icon_image"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:layout_marginStart="24dp"
-            android:layout_marginTop="20dp"
-            android:padding="5dp"
-            android:src="@drawable/search_ic"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textView4" />
-
-        <EditText
-            android:id="@+id/editText"
-            android:layout_width="0dp"
-            android:layout_height="55dp"
-            android:layout_marginStart="24dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="24dp"
-            android:autofillHints=""
-            android:background="@drawable/searchview"
-            android:focusable="false"
-            android:hint="Buscar receta"
-            android:paddingStart="47dp"
-            android:textColorHint="#5A5858"
-            android:textSize="17sp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textView4"
-            tools:ignore="RtlSymmetry" />
-
+            android:textSize="17sp" />
 
         <TextView
             android:id="@+id/textView5"
-            android:layout_width="0dp"
+            android:paddingStart="12dp"
+            android:paddingEnd="12dp"
+            android:paddingBottom="4dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
             android:layout_marginEnd="16dp"
             android:fontFamily="@font/poppins_semi"
             android:text="Categorías"
             android:textColor="@color/black"
-            android:textSize="19sp"
-            app:layout_constraintStart_toStartOf="@+id/textView2"
-            app:layout_constraintTop_toBottomOf="@+id/editText"
-            app:layout_constraintEnd_toEndOf="parent"/>
+            android:textSize="19sp" />
 
         <HorizontalScrollView
             android:id="@+id/horizontalScrollView"
-            android:layout_width="0dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="12dp"
-            android:scrollbars="none"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textView5">
+            android:scrollbars="none">
 
             <RelativeLayout
                 android:layout_width="wrap_content"
@@ -233,17 +183,17 @@
 
         <TextView
             android:id="@+id/popular_text"
-            android:layout_width="0dp"
+            android:paddingStart="12dp"
+            android:paddingEnd="12dp"
+            android:paddingBottom="4dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="24dp"
             android:layout_marginEnd="16dp"
             android:fontFamily="@font/poppins_semi"
             android:text="Populares"
             android:textColor="@color/black"
-            android:textSize="18sp"
-            app:layout_constraintStart_toStartOf="@+id/textView2"
-            app:layout_constraintTop_toBottomOf="@+id/horizontalScrollView"
-            app:layout_constraintEnd_toEndOf="parent"/>
+            android:textSize="18sp" />
 
         <com.airbnb.lottie.LottieAnimationView
             android:id="@+id/lottie"
@@ -251,22 +201,16 @@
             android:layout_height="150dp"
             android:layout_gravity="center"
             android:layout_marginTop="16dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/popular_text"
             app:lottie_autoPlay="true"
             app:lottie_rawRes="@raw/loading_anim" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rcview_popular"
-            android:layout_width="0dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
             android:paddingBottom="16dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/popular_text"
             tools:ignore="RtlSymmetry" />
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+    </LinearLayout>
 </androidx.core.widget.NestedScrollView>

@@ -50,6 +50,7 @@ public class FavoritesAdapter extends RecyclerView.Adapter<FavoritesAdapter.myvi
         // Load image from link - Assuming popular_list.xml has popular_img (img)
         // And User.getIdentifier() is the correct image source (URL or asset identifier stem)
         Glide.with(holder.txt2.getContext()).load(data.get(holder.getAdapterPosition()).getIdentifier()).into(holder.img);
+        Glide.with(holder.img.getContext()).load("file:///android_asset/data/" +data.get(position).getIdentifier() +".jpg").into(holder.img);
 
         // Set title - Assuming popular_list.xml has popular_txt (txt)
         holder.txt.setText(data.get(holder.getAdapterPosition()).getTitle());

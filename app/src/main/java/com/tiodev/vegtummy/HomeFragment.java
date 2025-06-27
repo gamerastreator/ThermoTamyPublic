@@ -1,28 +1,34 @@
 package com.tiodev.vegtummy;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.room.Room;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import com.airbnb.lottie.LottieAnimationView;
 import com.tiodev.vegtummy.Adapter.AdapterPopular;
+import com.tiodev.vegtummy.Adapter.SearchAdapter;
 import com.tiodev.vegtummy.RoomDB.AppDatabase;
 import com.tiodev.vegtummy.RoomDB.User;
 import com.tiodev.vegtummy.RoomDB.UserDao;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
-public class HomeFragment extends Fragment {
+public class HomeFragment extends Fragment implements AdapterPopular.OnRecipeClickListener {
 
     ImageView salad, main, drinks, dessert;
     RecyclerView rcview_home;
@@ -63,10 +69,11 @@ public class HomeFragment extends Fragment {
         dessert = view.findViewById(R.id.Desserts);
         rcview_home = view.findViewById(R.id.rcview_popular);
         lottie = view.findViewById(R.id.lottie);
-        editText = view.findViewById(R.id.editText);
 
         if (rcview_home != null) {
-            rcview_home.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
+            GridLayoutManager mLayoutManager = new GridLayoutManager(getActivity(),2);
+            rcview_home.setLayoutManager(mLayoutManager);
+           //rcview_home.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
             setPopularList();
         }
 
@@ -88,6 +95,8 @@ public class HomeFragment extends Fragment {
         }
         UserDao userDao = appDatabase.userDao();
         List<User> recipes = userDao.getAll(); // This still loads ALL recipes
+        Collections.shuffle(recipes);
+        List<User> recipesPopular = recipes.stream().limit(10).collect(Collectors.toList());
 
         // Original code filtered for "Popular" category, but it was commented out.
         // For now, I'll replicate the behavior in HomeActivity which was to add all to dataPopular.
@@ -118,9 +127,9 @@ public class HomeFragment extends Fragment {
         // For now, I will add a subset or all to dataPopular for display.
         // Let's add all for now, and it can be refined if "Popular" has a specific meaning.
 
-        dataPopular.addAll(recipes); // Populate dataPopular with fetched recipes
+        dataPopular.addAll(recipesPopular); // Populate dataPopular with fetched recipes
 
-        AdapterPopular adapter = new AdapterPopular(dataPopular, getContext());
+        AdapterPopular adapter = new AdapterPopular(dataPopular, getContext(), (AdapterPopular.OnRecipeClickListener) this);
         rcview_home.setAdapter(adapter);
 
         if (recipes != null && textview4 != null) {
@@ -137,5 +146,32 @@ public class HomeFragment extends Fragment {
         intent.putExtra("Category", category);
         intent.putExtra("tittle", title);
         startActivity(intent);
+    }
+    public void onRecipeClicked(User recipe) {
+        if (getActivity() == null || !isAdded() || recipe == null) {
+            return;
+        }
+
+        // Construct the htmlPath for WebviewRecipeFragment
+        // This assumes recipe.getIdentifier() gives the base name for the .html file
+        String htmlPath = "data/" + recipe.getIdentifier() + ".html";
+        String recipeIdStr = String.valueOf(recipe.getUid());
+
+        WebviewRecipeFragment webviewFragment = WebviewRecipeFragment.newInstance(
+                recipeIdStr,
+                htmlPath,
+                recipe.getTitle()
+        );
+
+        getParentFragmentManager().beginTransaction()
+                .replace(R.id.fragment_container, webviewFragment) // Assumes R.id.fragment_container is in HomeActivity
+                .addToBackStack(null) // Allows user to navigate back to search results
+                .commit();
+
+        // Optional: Hide keyboard if it was open
+        InputMethodManager imm = (InputMethodManager) requireActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+        if (imm != null && getView() != null) {
+            imm.hideSoftInputFromWindow(getView().getWindowToken(), 0);
+        }
     }
 }

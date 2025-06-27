@@ -1,5 +1,6 @@
 package com.tiodev.vegtummy.Adapter;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.view.LayoutInflater;
@@ -15,6 +16,7 @@ import com.bumptech.glide.Glide;
 import com.tiodev.vegtummy.R;
 import com.tiodev.vegtummy.RecipeActivity;
 import com.tiodev.vegtummy.RoomDB.User;
+import com.tiodev.vegtummy.WebviewRecipeFragment;
 
 import java.util.List;
 
@@ -22,10 +24,16 @@ public class AdapterPopular extends RecyclerView.Adapter<AdapterPopular.myviewho
 
     List<User> data;
     Context context;
+    private final OnRecipeClickListener clickListener;
 
-    public AdapterPopular(List<User> data, Context context) {
+    // Interface for click events
+    public interface OnRecipeClickListener {
+        void onRecipeClicked(User recipe);
+    }
+    public AdapterPopular(List<User> data, Context context, OnRecipeClickListener listener) {
         this.data = data;
         this.context = context;
+        this.clickListener = listener;
     }
 
     @NonNull
@@ -35,6 +43,11 @@ public class AdapterPopular extends RecyclerView.Adapter<AdapterPopular.myviewho
         return new myviewholder(view);
     }
 
+    @SuppressLint("NotifyDataSetChanged")
+    public void filterList(List<User> filterList) {
+        data = filterList;
+        notifyDataSetChanged();
+    }
     @Override
     public void onBindViewHolder(@NonNull myviewholder holder, int position) {
         final User temp = data.get(holder.getAdapterPosition());
@@ -44,16 +57,21 @@ public class AdapterPopular extends RecyclerView.Adapter<AdapterPopular.myviewho
         holder.txt2.setText("\uD83D\uDD50 "+data.get(holder.getAdapterPosition()).getTotalTime());
         // Load image from link
         Glide.with(holder.txt2.getContext()).load(data.get(holder.getAdapterPosition()).getIdentifier()).into(holder.img);
+        Glide.with(holder.img.getContext()).load("file:///android_asset/data/" +data.get(position).getIdentifier() +".jpg").into(holder.img);
+
         // Set title
         holder.txt.setText(data.get(holder.getAdapterPosition()).getTitle());
 
         holder.img.setOnClickListener(v ->{
-            Intent intent = new Intent(context, RecipeActivity.class);
+            if (clickListener != null) {
+                clickListener.onRecipeClicked(temp);
+            }
+           /*Intent intent = new Intent(context, RecipeActivity.class);
             intent.putExtra("id", String.valueOf(temp.getUid())); // Pass the recipe ID
             intent.putExtra("img", temp.getIdentifier()); // Assuming 'identifier' is the image URL
             intent.putExtra("tittle", temp.getTitle());
             intent.putExtra("des", temp.getRecipeYieldText()); // Assuming 'des' could be recipeYieldText or similar
-            intent.putExtra("ing", temp.getKeywords()); // Assuming 'ing' could be keywords or similar, this needs clarification
+            intent.putExtra("ing", temp.getKeywords());*/ // Assuming 'ing' could be keywords or similar, this needs clarification
                                                        // Or it might be a field that is not directly in User object but fetched separately.
                                                        // For now, using keywords as a placeholder.
                                                        // The original RecipeActivity splits "ing" by "\n"
@@ -83,11 +101,11 @@ public class AdapterPopular extends RecyclerView.Adapter<AdapterPopular.myviewho
             // It appears the database schema (User entity) and RecipeActivity's expectations for "ing" and "des" are not aligned.
             // I will pass title for des and category for ing as temporary placeholders to avoid nulls,
             // this will likely not show correct data in RecipeActivity for these fields.
-            intent.putExtra("des", temp.getTitle()); // Placeholder for description/steps
+            /*intent.putExtra("des", temp.getTitle()); // Placeholder for description/steps
             intent.putExtra("ing", temp.getCategory()); // Placeholder for ingredients, split by \n in RecipeActivity
 
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            context.startActivity(intent);
+            context.startActivity(intent);*/
         });
 
 

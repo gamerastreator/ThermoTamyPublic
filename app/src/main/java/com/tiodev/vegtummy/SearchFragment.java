@@ -17,12 +17,14 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.room.Room;
 
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
+import com.tiodev.vegtummy.Adapter.AdapterPopular;
 import com.tiodev.vegtummy.Adapter.SearchAdapter;
 import com.tiodev.vegtummy.RoomDB.AppDatabase;
 import com.tiodev.vegtummy.RoomDB.User;
@@ -33,7 +35,7 @@ import java.util.List;
 import java.util.Locale;
 
 // Implement the click listener interface
-public class SearchFragment extends Fragment implements SearchAdapter.OnRecipeClickListener {
+public class SearchFragment extends Fragment implements AdapterPopular.OnRecipeClickListener {
 
     // Copied from SearchActivity
     EditText search;
@@ -41,7 +43,7 @@ public class SearchFragment extends Fragment implements SearchAdapter.OnRecipeCl
     RecyclerView rcview;
     // dataPopular is initialized in filter() or by adapter, was empty initially in SearchActivity
     List<User> dataPopular = new ArrayList<>();
-    SearchAdapter adapter;
+    AdapterPopular adapter;
     List<User> recipes; // Full list of recipes from DB
     TextView results;
 
@@ -122,11 +124,14 @@ public class SearchFragment extends Fragment implements SearchAdapter.OnRecipeCl
         rating = view.findViewById(R.id.rating);
 
         // Setup RecyclerView
-        rcview.setLayoutManager(new LinearLayoutManager(getContext()));
+        GridLayoutManager mLayoutManager = new GridLayoutManager(getActivity(),2);
+        rcview.setLayoutManager(mLayoutManager);
+
+       // rcview.setLayoutManager(new LinearLayoutManager(getContext()));
         // dataPopular is used by adapter; it will be populated by the filter method.
         // Initialize with empty list for now.
         // Pass 'this' as the OnRecipeClickListener
-        adapter = new SearchAdapter(dataPopular, requireContext().getApplicationContext(), this);
+        adapter = new AdapterPopular(dataPopular, requireContext().getApplicationContext(), (AdapterPopular.OnRecipeClickListener) this);
         rcview.setAdapter(adapter);
 
         // Initial filter call if initialCollectionName is set or to show all/default

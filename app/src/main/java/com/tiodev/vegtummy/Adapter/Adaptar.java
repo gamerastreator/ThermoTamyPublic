@@ -52,6 +52,7 @@ public class Adaptar extends  RecyclerView.Adapter<Adaptar.myviewHolder>{
 
         holder.txt1.setText(data.get(position).getTitle());
         Glide.with(holder.txt1.getContext()).load(data.get(position).getIdentifier()).into(holder.img);
+        Glide.with(holder.img.getContext()).load("file:///android_asset/data/" +data.get(position).getIdentifier() +".jpg").into(holder.img);
 
         holder.img2.setOnClickListener(v -> {
 
