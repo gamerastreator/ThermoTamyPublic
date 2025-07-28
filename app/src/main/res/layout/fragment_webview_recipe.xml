@@ -64,6 +64,22 @@
             android:layout_marginEnd="8dp"
             android:contentDescription="@string/share_button_desc" /> {/* Standardized content desc */}
 
+        <ImageButton
+            android:id="@+id/guided_cooking_btn"
+            android:layout_width="45dp"
+            android:layout_height="45dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:clickable="true"
+            android:focusable="true"
+            android:padding="8dp"
+            android:src="@android:drawable/ic_menu_sort_by_size"
+            app:tint="@color/purple_500"
+            app:layout_constraintEnd_toStartOf="@+id/share_btn_webview"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_marginEnd="8dp"
+            android:contentDescription="Enable Guided Cooking" />
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <WebView

@@ -48,6 +48,7 @@ public class WebviewRecipeFragment extends Fragment {
     WebView webview;
     ImageButton favoriteBtnWebview;
     ImageButton shareBtnWebview;
+    ImageButton guidedCookingBtn;
 
     // Data
     String recipeId;
@@ -140,6 +141,7 @@ public class WebviewRecipeFragment extends Fragment {
         backBtn = view.findViewById(R.id.back_btn);
         favoriteBtnWebview = view.findViewById(R.id.favorite_btn_webview);
         shareBtnWebview = view.findViewById(R.id.share_btn_webview);
+        guidedCookingBtn = view.findViewById(R.id.guided_cooking_btn);
 
         // Check if essential data is loaded
         if (this.recipeId == null || this.recipeId.isEmpty() || this.htmlPathToLoad == null || this.htmlPathToLoad.isEmpty()) {
@@ -188,6 +190,8 @@ public class WebviewRecipeFragment extends Fragment {
             @Override
             public void onPageFinished(WebView view, String url) {
                 super.onPageFinished(view, url);
+                injectCss(view, "guided_cooking.css");
+                injectJs(view, "guided_cooking.js");
             }
 
             @Override
@@ -305,6 +309,10 @@ public class WebviewRecipeFragment extends Fragment {
                 }
             });
         }
+
+        guidedCookingBtn.setOnClickListener(v -> {
+            webview.evaluateJavascript("javascript:toggleGuidedCooking()", null);
+        });
     }
 
     // Placeholder for shareRecipe - to be filled
@@ -427,5 +435,37 @@ public class WebviewRecipeFragment extends Fragment {
             return null;
         }
         return null; // Return null if not found or error
+    }
+
+    private void injectJs(WebView view, String scriptFile) {
+        try {
+            InputStream inputStream = getContext().getAssets().open(scriptFile);
+            byte[] buffer = new byte[inputStream.available()];
+            inputStream.read(buffer);
+            inputStream.close();
+            String encoded = new String(buffer, "UTF-8");
+            view.evaluateJavascript(encoded, null);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void injectCss(WebView view, String cssFile) {
+        try {
+            InputStream inputStream = getContext().getAssets().open(cssFile);
+            byte[] buffer = new byte[inputStream.available()];
+            inputStream.read(buffer);
+            inputStream.close();
+            String encoded = new String(buffer, "UTF-8");
+            view.evaluateJavascript("javascript:(function() {" +
+                    "var parent = document.getElementsByTagName('head').item(0);" +
+                    "var style = document.createElement('style');" +
+                    "style.type = 'text/css';" +
+                    "style.innerHTML = window.atob('" + android.util.Base64.encodeToString(encoded.getBytes(), android.util.Base64.NO_WRAP) + "');" +
+                    "parent.appendChild(style)" +
+                    "})()", null);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }
